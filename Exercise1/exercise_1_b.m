@@ -63,7 +63,9 @@ function [C1,C2,dist_min] = plotdistance(A,B,C,D,plotVar)
         xlabel('X-axis');
         ylabel('Y-axis');
         zlabel('Z-axis');
-        % Possibility to set the view position
-        %view([-39.69 35.28]) 
+        % Possibility to set the view position, view(3) makes plot three
+        % dimensional
+        %view([-39.69 35.28])
+        view(3)
     end
 end

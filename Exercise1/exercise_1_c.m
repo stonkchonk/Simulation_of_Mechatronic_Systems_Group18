@@ -18,7 +18,7 @@ for i = 1:8             % Cicle to plot the graph with different T value
     Ti = Tg1-9+3*i;     % Modify the T value
     G1 = kg1/(1+Ti*s);  % Definition of the Transfer function with the new parameters
 
-    figure(1);          
+    figure(1);
     bode(G1);           % Plot in Figure(1) the bode diagram
     hold on;            % Maintains the previous graphs in the plot
 

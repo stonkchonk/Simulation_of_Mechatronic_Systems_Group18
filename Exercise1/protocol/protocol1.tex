@@ -6,6 +6,22 @@
 \usepackage{float}
 \geometry{margin=1.8cm}
 
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstdefinestyle{matlabstyle}{
+	language=Matlab,
+	basicstyle=\ttfamily\small,
+	numbers=left,
+	numberstyle=\tiny,
+	backgroundcolor=\color{gray!5},
+	frame=single,
+	keywordstyle=\color{blue},
+	commentstyle=\color{green!50!black},
+	stringstyle=\color{orange},
+	breaklines=true
+}
+
 
 \title{Exercise 1 protocol}
 \author{Member 1 - Matr.Nr. \\
@@ -15,5 +31,27 @@ Member 4 - Matr.Nr.}
 
 \begin{document}
 	\maketitle
-	Documentation to be written here
+	\section*{Exercise 1a)}
+	\lstinputlisting[style=matlabstyle]{../exercise_1_a.m}
+	
+	\begin{figure}[H]
+		\includegraphics[width=1.0\linewidth]{1a.pdf}
+		\caption{Plots of trigonometric functions.}
+		\label{fig:1a}
+	\end{figure}
+	
+	\section*{Exercise 1b)}
+	\lstinputlisting[style=matlabstyle]{../exercise_1_b.m}
+	
+	\begin{figure}[H]
+		\includegraphics[width=1.0\linewidth]{1b.pdf}
+		\caption{Calculated minimum distance between two lines in three dimensional space.}
+		\label{fig:ab}
+	\end{figure}
+	
+	\section*{Exercise 1c)}
+	\lstinputlisting[style=matlabstyle]{../exercise_1_c.m}
+	\section*{Exercise 1e)}
+	As there is no d) exercise, we continue on to exercise e).
+	\lstinputlisting[style=matlabstyle]{../exercise_1_e.m}
 \end{document}
