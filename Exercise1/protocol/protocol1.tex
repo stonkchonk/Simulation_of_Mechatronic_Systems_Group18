@@ -32,7 +32,6 @@ Member 4 - Matr.Nr.}
 \begin{document}
 	\maketitle
 	\section*{Exercise 1a)}
-	\lstinputlisting[style=matlabstyle]{../exercise_1_a.m}
 	
 	\begin{figure}[H]
 		\includegraphics[width=1.0\linewidth]{1a.pdf}
@@ -40,14 +39,44 @@ Member 4 - Matr.Nr.}
 		\label{fig:1a}
 	\end{figure}
 	
+	As shown in Figure \ref{fig:1a} above, several trigonometric functions have been plotted into two different graphs, one for $sin$, $cos$ and $tan$ and one for their corresponding inverse functions. We chose a linspace $X$ ranging from $-\pi$ to $\pi$ with 100 steps.\newline
+	Dedicated Matlab code below:
+	
+	\lstinputlisting[style=matlabstyle]{../exercise_1_a.m}
+	
 	\section*{Exercise 1b)}
-	\lstinputlisting[style=matlabstyle]{../exercise_1_b.m}
 	
 	\begin{figure}[H]
 		\includegraphics[width=1.0\linewidth]{1b.pdf}
 		\caption{Calculated minimum distance between two lines in three dimensional space.}
-		\label{fig:ab}
+		\label{fig:1b}
 	\end{figure}
+	
+	Figure \ref{fig:1b} shows the minimum distance between the two lined defined by the four points $A$, $B$, $C$ and $D$.\newline
+	At first we can calculate the directional vector for the two straight lines $AB$ and $CD$ as follows:
+	\begin{equation}
+		\begin{aligned}
+			V_1 = B-A \\
+			V_2 = D -C
+		\end{aligned}
+	\end{equation}
+	
+	With this we can define the two line equations $L_1(t)$ and $L_2(u)$ as follows:
+	
+	\begin{equation}
+		\begin{aligned}
+			L_1(t) = A +t*V_1 \\
+			L_2(u) = C +u*V_2
+		\end{aligned}
+	\end{equation}
+	
+	Next up, we define the difference between support vectors $A$ and $C$ as $P_1P_{2diff}$ as:
+	
+	\begin{equation}
+		P_1P_{2diff} = A - C
+	\end{equation}
+	
+	\lstinputlisting[style=matlabstyle]{../exercise_1_b.m}
 	
 	\section*{Exercise 1c)}
 	\lstinputlisting[style=matlabstyle]{../exercise_1_c.m}
