@@ -30,7 +30,7 @@ function [C1,C2,dist_min] = plotdistance(A,B,C,D,plotVar)
     else
         % Resolution for t and u
         t0 = (dot(cross(v2, n), p1p2))/dot(n,n);
-        u0 = (dot(cross(v1, n), C - A))/dot(n,n);
+        u0 = (dot(cross(v1, n), p1p2))/dot(n,n);
         
         % point C1 and C2
         C1 = A + t0 * v1;
