@@ -11,31 +11,26 @@ figure()       %Creation of the second figure (tab)
 
 
 % function to get the minimum distance between two segment
+% segments shall be defined as l1: A + v1*t, l2: C + v2*u
 function [C1,C2,dist_min] = plotdistance(A,B,C,D,plotVar)
 
     % 1. calc direction vector
     v1 = B - A;      
-    v2 = D - C;      
-    P1_P2_diff = A - C; 
-    
-    % 2. Calc of the scalar product
-    a = dot(v1, v1); % a = ||v1||^2
-    b = dot(v1, v2); % b = v1 . v2
-    c = dot(v2, v2); % c = ||v2||^2
-    d = dot(P1_P2_diff, v1);
-    e = dot(P1_P2_diff, v2);
-    
-    % 3. Calc of determinats and the t and u parameters
-    Delta = a * c - b * b;
+    v2 = D - C;
+    % difference between support vectors
+    p1p2 = C - A;
 
-    %chech if the segments are parallel
-    if abs(Delta) < 1e-6 
+    % cross product perpendicular to both segments
+    n = cross(v1, v2)
+    
+    % chech if segments are parallel
+    if norm(n) < 1e-6 
         disp('The segments are parallel');
         return
     else
-        % Resolution for t e u
-        t0 = (b * e - c * d) / Delta; % bc - de
-        u0 = (a * e - b * d) / Delta; % ae - bd
+        % Resolution for t and u
+        t0 = (dot(cross(v2, n), p1p2))/dot(n,n);
+        u0 = (dot(cross(v1, n), C - A))/dot(n,n);
         
         % point C1 and C2
         C1 = A + t0 * v1;
