@@ -10,9 +10,7 @@ kg2 = 5;
 Tg2 = 0.4;
 dg2 = 0.5;
 
-
-
-leg_array = [];         % Array definition for the legend
+legend_string_pt1 = 'legend('; % String definition for the legend
 
 for i = 1:8             % Cicle to plot the graph with different T value
     Ti = Tg1-9+3*i;     % Modify the T value
@@ -26,22 +24,23 @@ for i = 1:8             % Cicle to plot the graph with different T value
     step(G1);           % Plot in Figure(2) the step response diagram
     hold on             % Maintains the previous graphs in the plot
 
-    leg_array = [leg_array;"k="+kg1+" T="+Ti];  % Add to the legend array the new graph parameters
+    legend_string_pt1 = [legend_string_pt1 '''T=' num2str(Ti) ''',']; % Add to the legend string the new graph parameters
 end
+legend_string_pt1(end) = ')'; % complete legend command
 
 % Display title and legend for figure (1) and (2)
 figure(1)
 title("bode plot G1")
-legend(leg_array,'location','southeast')
+eval(legend_string_pt1);
 grid on;
 figure(2)
 title("step response G1");
-legend(leg_array,'location','southeast')
+eval(legend_string_pt1);
 grid on;
 
 
 
-leg_array = []; % Array definition for the legend
+legend_string_pt2 = 'legend('; % String definition for the legend
 
 for i = 1:8         % Cicle to plot the graph with different T value
     Ti = Tg2*i;     % Modify the T value
@@ -55,15 +54,16 @@ G2 = kg2/(1+2*Ti*dg2*s+(Ti^2)*(s^2));   % Definition of the Transfer function wi
     step(G2);       % Plot in Figure(4) the step response diagram
     hold on         % Maintains the previous graphs in the plot
 
-    leg_array = [leg_array;"k="+kg2+" T="+Ti];  % Add to the legend array the new graph parameters
+    legend_string_pt2 = [legend_string_pt2 '''T=' num2str(Ti) ''',']; % Add to the legend string the new graph parameters
 end
+legend_string_pt2(end) = ')'; % complete legend command
 
 % Display title and legend for figure (3) and (4)
 figure(3)
 title("bode plot G2")
-legend(leg_array,'location','southeast')
+eval(legend_string_pt2);
 grid on;
 figure(4)
 title("step response G2");
-legend(leg_array,'location','southeast')
+eval(legend_string_pt2);
 grid on;
