@@ -23,7 +23,7 @@
 }
 
 
-\title{Exercise 1 protocol}
+\title{Simulation of Mechatronic Systems \\\large Exercise 1 protocol}
 \IfFileExists{authors.tex}{
 	\input{authors} % this pulls in authors.tex
 }{
@@ -101,32 +101,79 @@
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.8\linewidth]{1cBode1.pdf}
-		\caption{Bode plot for $G_{PT1}$}
+		\caption{Bode diagram for $G_{PT1}$}
 		\label{fig:1cBode1}
 	\end{figure}
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.8\linewidth]{1cStep1.pdf}
-		\caption{Step plot for $G_{PT1}$}
+		\caption{Step response for $G_{PT1}$}
 		\label{fig:1cStep1}
 	\end{figure}
 	
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.8\linewidth]{1cBode2.pdf}
-		\caption{Bode plot for $G_{PT2}$}
+		\caption{Bode diagram for $G_{PT2}$}
 		\label{fig:1cBode2}
 	\end{figure}
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.8\linewidth]{1cStep2.pdf}
-		\caption{Step plot for $G_{PT2}$}
+		\caption{Step response for $G_{PT2}$}
 		\label{fig:1cStep2}
 	\end{figure}
+	\newpage
+	\noindent
+	Our first transfer function $G_{PT1}(s)$ can be defined as:
 	
+	\begin{equation}
+		G_{PT1}(s) = \frac{K}{1 + T*s}
+	\end{equation}
+	\noindent
+	The corresponding bode-diagram is displayed in Figure \ref{fig:1cBode1}. Hereby we chose $K$ to be a constant value and eight different values for $T$ ranging from 4 to 25 which yields eight distinct graphs for Magnitude and Phase over frequency. \newline
+	The same values for $K$ and $T$ have been chosen in the step response displayed in Figure \ref{fig:1cStep1}. Once again this yields eight distinct graphs for Amplitude over time.
+	\newline\newline
+	Our second transfer function $G_{PT2}(s)$ can be defined as:
 	
+	\begin{equation}
+		G_{PT2}(s) = \frac{K}{1 + 2dT*s + T^2*s^2}
+	\end{equation}
+	\noindent
+	The corresponding bode-diagram is displayed in Figure \ref{fig:1cBode2}. Hereby we chose $K$ and $d$ to be constants and eight different values for $T$ ranging from 0.4 to 3.2 which yields eight distinct graphs for Magnitude and Phase over frequency. \newline
+	The same values for $K$, $d$ and $T$ have been chosen in the step response displayed in Figure \ref{fig:1cStep2}. Once again this yields eight distinct graphs for Amplitude over time.
+	\newline\newline\noindent
+	\textbf{Matlab Code:}
 	\lstinputlisting[style=matlabstyle]{../exercise_1_c.m}
-	\section*{Exercise 1e)}
+	\newpage
+	\section*{Exercise 1e): Building our own function for plotting bode diagrams}
 	As there is no d) exercise, we continue on to exercise e).
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\linewidth]{1eBuiltinBode.pdf}
+		\caption{Bode diagram for transfer function using the builtin bode function}
+		\label{fig:1eBuiltinBode}
+	\end{figure}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\linewidth]{1eMyBode.pdf}
+		\caption{Bode diagram for transfer function using the our own implementation of the bode function}
+		\label{fig:1eMyBode}
+	\end{figure}
+	\newpage
+	\noindent
+	First of all, we define the transfer function $G(s)$ as follows:
+	
+	\begin{equation}
+		G(s) = \frac{K}{1 + 2Td*s+T^2*s^2}*e^{T_ts}
+	\end{equation}
+	\noindent
+	All parameter values in this equation are constants to be defined as $K=3$, $T_t=0$ and $T=0.4$.
+	Using the builtin bode function yields the bode diagram as shown in Figure \ref{fig:1eBuiltinBode}. One graph for Magnitude and Phase over frequency is rendered over a logarithmic scale.\newline
+	Similarly, we can insert the transfer function with the set constant parameters into our own defined bode function. This yields the bode diagram as shown in Figure \ref{fig:1eMyBode}. Once again one graph for Magnitude and Phase over frequency is rendered over a logarithmic scale.\newline
+	Both implementations seem to yield the same results, at least within the overlapping ranges for frequency which means that our implementation satisfies the requirements.
+	\newline\newline\noindent
+	\textbf{Matlab Code:}
+	
 	\lstinputlisting[style=matlabstyle]{../exercise_1_e.m}
 \end{document}

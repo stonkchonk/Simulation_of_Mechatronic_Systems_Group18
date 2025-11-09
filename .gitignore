@@ -2,6 +2,8 @@
 *.gz
 *.log
 *.out
-authors.tex
+Exercise1/protocol/authors.tex
+Exercise1/protocol/protocol1.pdf
+
 
 *.asv
