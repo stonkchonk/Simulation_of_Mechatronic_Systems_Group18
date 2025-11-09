@@ -24,14 +24,15 @@
 
 
 \title{Exercise 1 protocol}
-\author{Member 1 - Matr.Nr. \\
-Member 2 - Matr.Nr. \\
-Member 3 - Matr.Nr. \\
-Member 4 - Matr.Nr.}
+\IfFileExists{authors.tex}{
+	\input{authors} % this pulls in authors.tex
+}{
+	\author{please create an authors.tex file}
+}
 
 \begin{document}
 	\maketitle
-	\section*{Exercise 1a)}
+	\section*{Exercise 1a): Plotting trigonometric functions}
 	
 	\begin{figure}[H]
 		\includegraphics[width=1.0\linewidth]{1a.pdf}
@@ -39,12 +40,12 @@ Member 4 - Matr.Nr.}
 		\label{fig:1a}
 	\end{figure}
 	
-	As shown in Figure \ref{fig:1a} above, several trigonometric functions have been plotted into two different graphs, one for $sin$, $cos$ and $tan$ and one for their corresponding inverse functions. We chose a linspace $X$ ranging from $-\pi$ to $\pi$ with 100 steps.\newline
-	Dedicated Matlab code below:
+	As shown in Figure \ref{fig:1a} above, several trigonometric functions have been plotted into two different figures, one for $sin$, $cos$, $tan$ and one for their corresponding inverse functions. We chose a sufficient linspace $X$ ranging from $-\pi$ to $\pi$ with 100 steps.\newline\newpage\noindent
+	\textbf{Matlab Code:}
 	
 	\lstinputlisting[style=matlabstyle]{../exercise_1_a.m}
 	
-	\section*{Exercise 1b)}
+	\section*{Exercise 1b): Calculating minimum distance between lines in 3D space}
 	
 	\begin{figure}[H]
 		\includegraphics[width=1.0\linewidth]{1b.pdf}
@@ -60,7 +61,7 @@ Member 4 - Matr.Nr.}
 			V_2 = D -C
 		\end{aligned}
 	\end{equation}
-	
+	\noindent
 	With this we can define the two line equations $L_1(t)$ and $L_2(u)$ as follows:
 	
 	\begin{equation}
@@ -69,16 +70,61 @@ Member 4 - Matr.Nr.}
 			L_2(u) = C +u*V_2
 		\end{aligned}
 	\end{equation}
-	
-	Next up, we define the difference between support vectors $A$ and $C$ as $P_1P_{2diff}$ as:
+	\noindent
+	Next up, we define the difference between support vectors $A$ and $C$ as $P_1P_2$ as:
 	
 	\begin{equation}
-		P_1P_{2diff} = A - C
+		P_1P_2 = C - A
 	\end{equation}
+	\noindent
+	A single solution for the closest approach between two lines exists if they are not parallel. To check this requirement, we have to check if the cross product $n=V_1\times V_2$ between the directional vectors is a vector of nonzero magnitude. Specifically we check if this value is greater than a threshold $\epsilon$, which is a value close to zero because of floating point arithmetic.
+	
+	\begin{equation}\label{cross_product}
+		|n|<\epsilon
+	\end{equation}
+	\noindent
+	Hereby we chose the value $\epsilon=10^{-6}$. If the condition \ref{cross_product} is fulfilled, we can continue on to calculate the values $t_0$ and $u_0$ which correspond to the closest approach of $L_1$ and $L_2$ as follows:
+	
+	\begin{equation}
+		\begin{aligned}
+			t_0 = \frac{(V_2\times n)\cdot P_1P_2}{n \cdot n} \\
+			u_0 = \frac{(V_1\times n)\cdot P_1P_2}{n \cdot n}
+		\end{aligned}
+	\end{equation}
+	\noindent
+	Inserting the values $t_0$ into $L_1(t)$ and $u_0$ into $L_2(u)$ yields the two points which correspond to the closest approach on each line.\newline\newline\noindent
+	\textbf{Matlab Code:}
 	
 	\lstinputlisting[style=matlabstyle]{../exercise_1_b.m}
+	\newpage
+	\section*{Exercise 1c): Bode and step plots for two functions}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\linewidth]{1cBode1.pdf}
+		\caption{Bode plot for $G_{PT1}$}
+		\label{fig:1cBode1}
+	\end{figure}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\linewidth]{1cStep1.pdf}
+		\caption{Step plot for $G_{PT1}$}
+		\label{fig:1cStep1}
+	\end{figure}
 	
-	\section*{Exercise 1c)}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\linewidth]{1cBode2.pdf}
+		\caption{Bode plot for $G_{PT2}$}
+		\label{fig:1cBode2}
+	\end{figure}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\linewidth]{1cStep2.pdf}
+		\caption{Step plot for $G_{PT2}$}
+		\label{fig:1cStep2}
+	\end{figure}
+	
+	
 	\lstinputlisting[style=matlabstyle]{../exercise_1_c.m}
 	\section*{Exercise 1e)}
 	As there is no d) exercise, we continue on to exercise e).

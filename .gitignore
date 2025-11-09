@@ -2,5 +2,6 @@
 *.gz
 *.log
 *.out
+authors.tex
 
 *.asv
