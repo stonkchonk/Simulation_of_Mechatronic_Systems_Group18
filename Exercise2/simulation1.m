@@ -1,50 +1,63 @@
-function dy= spring_pendulum1(t,y,p)
-L=y(1);
-dL=y(2);
-phi=y(3);
-dphi=y(4);
-m=p.m;
-C=p.C;
-g=p.g;
-L0=p.L0;
+function dy = spring_pendulum1(t, y, p)
 
-ddL   = ( g*m*cos(phi) - C*L + C*L0 + m*L*dphi^2 ) / m;
-ddphi = -( g*sin(phi) + 2*dL*dphi ) / L;
+    % Extract states
+    L     = y(1);   % Spring length
+    dL    = y(2);   % Spring length velocity
+    phi   = y(3);   % Angle from vertical (rad)
+    dphi  = y(4);   % Angular velocity
 
-dy=[dL;ddL;dphi;ddphi];
+    % Extract parameters
+    m  = p.m;       % Mass
+    C  = p.C;       % Spring constant
+    g  = p.g;       % Gravity
+    L0 = p.L0;      % Natural spring length
 
+    % Radial acceleration (spring + gravity + centripetal)
+    ddL = ( g*m*cos(phi) - C*L + C*L0 + m*L*dphi^2 ) / m;
 
+    % Angular acceleration (gravity + Coriolis term)
+    ddphi = -( g*sin(phi) + 2*dL*dphi ) / L;
+
+    % Return derivative vector
+    dy = [dL; ddL; dphi; ddphi];
 end
 
+
+% Main script
 clear; clc; close all;
-p.m=0.1;
-p.g=9.81;
-p.C=3;
-p.L0=0.5;
 
-y0=[0.6;0;pi/3;0];
-T=[0;10];
+% Parameters
+p.m  = 0.1;        % mass
+p.g  = 9.81;       % gravity
+p.C  = 3;          % spring constant
+p.L0 = 0.5;        % natural spring length
 
+% Initial conditions: [L; dL; phi; dphi]
+y0 = [0.6; 0; pi/3; 0];
 
-[t1,y1] = ode23(@(t,y) spring_pendulum1(t,y,p), T, y0);
-[t2,y2] = ode45(@(t,y) spring_pendulum1(t,y,p), T, y0);
-[t3,y3] = ode15s(@(t,y) spring_pendulum1(t,y,p), T, y0);
+% Simulation time
+T = [0; 10];
 
+% Solvers
+[t1, y1] = ode23(@(t,y) spring_pendulum1(t,y,p), T, y0);
+[t2, y2] = ode45(@(t,y) spring_pendulum1(t,y,p), T, y0);
+[t3, y3] = ode15s(@(t,y) spring_pendulum1(t,y,p), T, y0);
+
+% Plot all state variables
 figure; hold on; grid on;
-plot(t1,y1(:,1),'Linewidth',1.25);
-plot(t1,y1(:,2),'Linewidth',1.25);
-plot(t1,y1(:,3),'Linewidth',1.25);
-plot(t1,y1(:,4),'Linewidth',1.25);
-title('state_variables');
-xlabel('t');
-ylabel('y');
-legend('L','dL','phi','dphi');
+plot(t1, y1(:,1), 'LineWidth', 1.25);  % L(t)
+plot(t1, y1(:,2), 'LineWidth', 1.25);  % dL(t)
+plot(t1, y1(:,3), 'LineWidth', 1.25);  % phi(t)
+plot(t1, y1(:,4), 'LineWidth', 1.25);  % dphi(t)
+title('State Variables');
+xlabel('t'); ylabel('y');
+legend('L','dL','\phi','d\phi');
 
+% Compare solvers for L(t)
 figure; hold on; grid on;
-plot(t1,y1(:,1),'r-','LineWidth',1.5);
-plot(t2,y2(:,1),'m--','LineWidth',1.5);
-plot(t3,y3(:,1),'yo','LineWidth',1.5);
-title('solvers');
+plot(t1, y1(:,1), 'r-',  'LineWidth', 1.5);  % ode23 solution
+plot(t2, y2(:,1), 'm--', 'LineWidth', 1.5);  % ode45 solution
+plot(t3, y3(:,1), 'yo',  'LineWidth', 1.5);  % ode15s solution
+title('Solver Comparison');
+xlabel('t'); ylabel('L(t)');
 legend('ode23','ode45','ode15s');
-xlabel('t');
-ylabel('L(t)');
