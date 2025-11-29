@@ -32,5 +32,51 @@
 
 \begin{document}
 	\maketitle
+	\section*{Exercise 1a): Building up the simulation model inside Matlab}
+	First of all, our spring pendulum model can be described by two differential equations. The first one describes the second derivative of pendulum length subject to time as:
 	
+	\begin{equation}
+		\label{eqL}
+		\ddot{L}(t)=\frac{g*m*\cos(\varphi(t)) - C*L(t) + C*L_0 + m*L(t)*\dot{\varphi}(t)^2}{m}
+	\end{equation}
+	\noindent
+	Hereby $g$ represents earth's gravitational acceleration with $g=9.81\frac{m}{s^2}$, $m$ the pendulum's mass, $C$ a multiplying constant, $L$ the pendulum spring length or appropriate derivatives and $\varphi$ the pendulum's displacement from the center or appropriate derivatives. \newline
+	The next equation describes the second derivative of the pendulum's displacement from the center subject to time as:
+	
+	\begin{equation}
+		\label{eqP}
+		\ddot{\varphi}(t)=-\frac{g*\sin(\varphi(t)) + 2*\dot{L}(t)*\dot{\varphi}(t)}{L(t)}
+	\end{equation}
+	\noindent
+	Now that these equations for our model have been defined, we can determine first order differential equations for ode solvers so that the model can be simulated inside Matlab. For this, we assign some initial values $y_i$ to $L$, $\dot{L}$, $\varphi$ and $\dot{\varphi}$ as follows:\newline
+	\begin{equation}
+		\label{eqB}
+		\begin{aligned}
+			L = y_1 \\
+			\dot{L}=y_2 \\
+			\varphi=y_3 \\
+			\dot{\varphi}=y_4
+		\end{aligned}
+	\end{equation}
+	\noindent
+	Using statements \ref{eqL}, \ref{eqP} and \ref{eqB}, we can determine derivatives for all equations of statement \ref{eqB} as follows: 
+	\begin{equation}
+		\label{eqD}
+		\begin{aligned}
+			\dot{L}=y_2 \\
+			\ddot{L}=\frac{g*m*\cos(y_3) - C*y_1 + C*L_0 + m*y_1*y_4^2}{m} \\
+			\dot{\varphi}=y_4 \\
+			\ddot{\varphi}=-\frac{g*\sin(y_3) + 2*y_2*y_4}{y_1}
+		\end{aligned}
+	\end{equation}
+	\noindent
+	Using the above stated statements \ref{eqD}, we can derive some Matlab code so that our mathematical model can be computed by an ode solver. The code is stated below.
+	\newpage
+	\noindent
+	\textbf{Matlab Code:}
+	\lstinputlisting[style=matlabstyle, linerange={1-23}]{../simulation1.m}
+	\newpage
+	
+	\section*{Exercise 1b): Simulating the system with different initial values and solvers}
+		
 \end{document}

@@ -1,21 +1,21 @@
 function dy = spring_pendulum1(t, y, p)
 
     % Extract states
-    L     = y(1);   % Spring length
-    dL    = y(2);   % Spring length velocity
-    phi   = y(3);   % Angle from vertical (rad)
-    dphi  = y(4);   % Angular velocity
+    L     = y(1);   % Spring length [m]
+    dL    = y(2);   % Spring length velocity [m/s]
+    phi   = y(3);   % Angle from vertical [rad]
+    dphi  = y(4);   % Angular velocity [rad/s]
 
     % Extract parameters
-    m  = p.m;       % Mass
-    C  = p.C;       % Spring constant
-    g  = p.g;       % Gravity
-    L0 = p.L0;      % Natural spring length
+    m  = p.m;       % Mass [kg]
+    C  = p.C;       % Spring constant [kg*s^-2]
+    g  = p.g;       % Gravity [m/s^2]
+    L0 = p.L0;      % Natural spring length [m]
 
-    % Radial acceleration (spring + gravity + centripetal)
+    % Radial acceleration (spring + gravity + centripetal) [m/s^2]
     ddL = ( g*m*cos(phi) - C*L + C*L0 + m*L*dphi^2 ) / m;
 
-    % Angular acceleration (gravity + Coriolis term)
+    % Angular acceleration (gravity + Coriolis term) [rad/s^2]
     ddphi = -( g*sin(phi) + 2*dL*dphi ) / L;
 
     % Return derivative vector
@@ -36,7 +36,7 @@ p.L0 = 0.5;        % natural spring length
 y0 = [0.6; 0; pi/3; 0];
 
 % Simulation time
-T = [0; 10];
+T = [0; 20];
 
 % Solvers
 [t1, y1] = ode23(@(t,y) spring_pendulum1(t,y,p), T, y0);
