@@ -73,10 +73,85 @@
 	Using the above stated statements \ref{eqD}, we can derive some Matlab code so that our mathematical model can be computed by an ode solver. The code is stated below.
 	\newpage
 	\noindent
-	\textbf{Matlab Code:}
+	\textbf{Matlab Code Snippet:}
 	\lstinputlisting[style=matlabstyle, linerange={1-23}]{../simulation1.m}
 	\newpage
 	
 	\section*{Exercise 1b): Simulating the system with different initial values and solvers}
+	This task can be grouped into two sub tasks. For one, we want to simulate our pendulum spring system with different initial values. It is also a requirement that multiple solvers have to be used. As such, we are going to use a single fixed ode solver for simulating our system with different initial values. Furthermore, we are going to simulate a our system with fixed initial values using multiple solvers in order to compare solver performance.\newline
+	The evaluation of resulting output will be conducted in the next section for task 1c).
+	\subsection*{Simulating with different initial values and movement of the mass}
+	For this sub task we chose the ode45 solver for all simulation executions. The thing that does change are the constant values. They are similar for all executions, namely the pendulum's mass $m=0.1 kg$, the spring constant $C=3.0 N/m$, the natural spring length $L_0 = 0.5m$. Furthermore, the simulation time for all runs is 10 seconds.
+	\newline
+	There is a multitude of scenarios we could simulate, however for the sake of simplicity we limit ourselves to four scenarios, thus four simulation runs with four sets of different initial values.
+	\newline\newline
+	\textbf{Scenario 1:} The pendulum's mass starts of at the natural spring length, with zero lateral and horizontal velocity and zero displacement.\newline
+	$L=L_0$, $\dot{L}=0$, $\varphi=0$, $\dot{\varphi}=0$
+	\newline\newline
+	\textbf{Scenario 2:} The pendulum's mass starts of at the natural spring length, with zero lateral and horizontal velocity and a displacement of 45°.\newline
+	$L=L_0$, $\dot{L}=0$, $\varphi=\frac{\pi}{4}$, $\dot{\varphi}=0$
+	\newline\newline
+	\textbf{Scenario 3:} The pendulum's mass starts of at a compressed spring length, with zero lateral and horizontal velocity and a displacement of 45°.\newline
+	$L=0.1$, $\dot{L}=0$, $\varphi=\frac{\pi}{4}$, $\dot{\varphi}=0$
+	\newline\newline
+	\textbf{Scenario 4:} The pendulum's mass starts of at natural spring length, with some lateral and horizontal velocity and a displacement of 45°.\newline
+	$L=0.1$, $\dot{L}=1$, $\varphi=\frac{\pi}{4}$, $\dot{\varphi}=\frac{\pi}{4}$
+	\newline\newline
+	These values yield the following plots for mass movements and the total plot for system parameters subject to time:\newline
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\linewidth]{sim1mass.pdf}
+		\caption{Mass movement for scenario 1.}
+		\label{fig:sim1mass}
+	\end{figure}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\linewidth]{sim2mass.pdf}
+		\caption{Mass movement for scenario 2.}
+		\label{fig:sim2mass}
+	\end{figure}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\linewidth]{sim3mass.pdf}
+		\caption{Mass movement for scenario 3.}
+		\label{fig:sim3mass}
+	\end{figure}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\linewidth]{sim4mass.pdf}
+		\caption{Mass movement for scenario 4.}
+		\label{fig:sim4mass}
+	\end{figure}
+	\noindent
+	The above Figures \ref{fig:sim1mass}, \ref{fig:sim2mass}, \ref{fig:sim3mass} and \ref{fig:sim4mass} display the movement path of the pendulum's mass over a time frame of ten seconds for our previously defined scenarios or otherwise previously defined different initial values. Next up, we take a look at the system parameters and how they change over time.
+	\newline
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1.0\linewidth]{system_values.pdf}
+		\caption{System parameters and how they change over time.}
+		\label{fig:sysparams}
+	\end{figure}
+	\noindent
+	Figure \ref{fig:sysparams} shows graphs for our system's parameters spring length, change of spring length, angular displacement and change of angular displacement for the previously defined four scenarios subject to a time frame of ten seconds.\newline
+	\textbf{Matlab Code Snippet:}
+	\lstinputlisting[style=matlabstyle, linerange={1-62, 82-106}]{../Excercise_2_Alessandro.m}
+	
+	\subsection*{Simulating with different ode solvers}
+	Next up, we want to test the performance of different ode solvers.
+	% TODO: Insert documentation here
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1.0\linewidth]{solver_comparrison.pdf}
+		\caption{Simulating L(t) over a time frame of 25 seconds using various solvers.}
+		\label{fig:solver_comparrison}
+	\end{figure}
+	
+	\textbf{Matlab Code Snippet:}
+	\lstinputlisting[style=matlabstyle, linerange={35-46, 56-81}]{../simulation1.m}
+	
+	\section*{Exercise 1c): Comparing results different initial values and solvers}
+	% TODO: Insert documentation here
+	\section*{Exercise 1d): Documenting our work and problems using the solvers}
+	We consider this task to be fulfilled as we documented our work right here with this protocol.
 		
 \end{document}

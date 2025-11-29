@@ -1,4 +1,4 @@
-function dy = spring_pendulum1(t, y, p)
+function dy = pendulumDgl(t, y, p)
 
     % Extract states
     L     = y(1);   % Spring length [m]
@@ -8,7 +8,7 @@ function dy = spring_pendulum1(t, y, p)
 
     % Extract parameters
     m  = p.m;       % Mass [kg]
-    C  = p.C;       % Spring constant [kg*s^-2]
+    C  = p.C;       % Spring constant [N/m]
     g  = p.g;       % Gravity [m/s^2]
     L0 = p.L0;      % Natural spring length [m]
 
@@ -36,12 +36,13 @@ p.L0 = 0.5;        % natural spring length
 y0 = [0.6; 0; pi/3; 0];
 
 % Simulation time
-T = [0; 20];
+T = [0; 25];
 
-% Solvers
-[t1, y1] = ode23(@(t,y) spring_pendulum1(t,y,p), T, y0);
-[t2, y2] = ode45(@(t,y) spring_pendulum1(t,y,p), T, y0);
-[t3, y3] = ode15s(@(t,y) spring_pendulum1(t,y,p), T, y0);
+% Results for different solvers
+[t1, y1] = ode23(@(t,y) pendulumDgl(t,y,p), T, y0);
+[t2, y2] = ode45(@(t,y) pendulumDgl(t,y,p), T, y0);
+[t3, y3] = ode15s(@(t,y) pendulumDgl(t,y,p), T, y0);
+[t4, y4] = ode89(@(t,y) pendulumDgl(t,y,p), T, y0);
 
 % Plot all state variables
 figure; hold on; grid on;
@@ -55,9 +56,26 @@ legend('L','dL','\phi','d\phi');
 
 % Compare solvers for L(t)
 figure; hold on; grid on;
-plot(t1, y1(:,1), 'r-',  'LineWidth', 1.5);  % ode23 solution
-plot(t2, y2(:,1), 'm--', 'LineWidth', 1.5);  % ode45 solution
-plot(t3, y3(:,1), 'yo',  'LineWidth', 1.5);  % ode15s solution
-title('Solver Comparison');
+subplot(3, 1, 1)
+plot(t2, y2(:,1), 'r-', 'LineWidth', 1.5);  % ode45 solution
+hold on;
+plot(t1, y1(:,1), 'b--',  'LineWidth', 1.5);  % ode23 solution
+title('ode45 vs ode23');
 xlabel('t'); ylabel('L(t)');
-legend('ode23','ode45','ode15s');
+legend('ode45','ode23');
+
+subplot(3, 1, 2)
+plot(t2, y2(:,1), 'r-', 'LineWidth', 1.5);  % ode45 solution
+hold on;
+plot(t3, y3(:,1), 'k--',  'LineWidth', 1.5);  % ode15s solution
+title('ode45 vs ode15s');
+xlabel('t'); ylabel('L(t)');
+legend('ode45','ode15s');
+
+subplot(3, 1, 3)
+plot(t2, y2(:,1), 'r-', 'LineWidth', 1.5);  % ode45 solution
+hold on;
+plot(t4, y4(:,1), 'g--',  'LineWidth', 1.5);  % ode89 solution
+title('ode45 vs ode89');
+xlabel('t'); ylabel('L(t)');
+legend('ode45','ode89');
