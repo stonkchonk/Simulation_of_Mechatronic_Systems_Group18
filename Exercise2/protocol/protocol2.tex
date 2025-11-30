@@ -22,6 +22,16 @@
 	breaklines=true
 }
 
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks=true,
+	linkcolor=blue,
+	filecolor=magenta,      
+	urlcolor=cyan,
+	pdftitle={Overleaf Example},
+	pdfpagemode=FullScreen,
+}
+
 
 \title{Simulation of Mechatronic Systems \\\large Exercise 2 protocol}
 \IfFileExists{authors.tex}{
@@ -137,20 +147,28 @@
 	\lstinputlisting[style=matlabstyle, linerange={1-62, 82-106}]{../Excercise_2_Alessandro.m}
 	
 	\subsection*{Simulating with different ode solvers}
-	Next up, we want to test the performance of different ode solvers.
-	% TODO: Insert documentation here
+	Next, we want to test the performance of different ode solvers. Specifically, we want to compare three other solvers to the ode45 solver, which we used previously. According to the \href{https://de.mathworks.com/help/matlab/math/choose-an-ode-solver.html}{Matlab Documentation for choosing ode solvers}, ode45 is of medium accuracy. The to be compared solvers are ode23 (low accuracy), ode15s (low to medium accuracy, used for stiff systems) and ode89 (high accuracy). The test is to be conducted by comparing the value of $L(t)$ over a time frame of 25 seconds, always with similar initial conditions.\newline
+	The following graphic below displays the results as three plots:
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=1.0\linewidth]{solver_comparrison.pdf}
 		\caption{Simulating L(t) over a time frame of 25 seconds using various solvers.}
 		\label{fig:solver_comparrison}
 	\end{figure}
-	
+	\noindent
+	The evaluation of resulting output will be conducted in the next section for task 1c).
+	\newline
+	\noindent
 	\textbf{Matlab Code Snippet:}
 	\lstinputlisting[style=matlabstyle, linerange={35-46, 56-81}]{../simulation1.m}
 	
 	\section*{Exercise 1c): Comparing results different initial values and solvers}
-	% TODO: Insert documentation here
+	Now that we have generated some plots, we can compare the results for different initial values and different solvers.
+	\subsection*{Different initial values}
+	As is visible in Figures \ref{fig:sim1mass}, \ref{fig:sim2mass}, \ref{fig:sim3mass} and \ref{fig:sim4mass}, different Scenarios result in drastically varying movement patterns of the pendulum's mass. This can also be observed in the plots of Figure \ref{fig:sysparams}. A special case is Scenario 1, as there is no angular movement which explains the flat line for angular displacement and angular velocity.
+	\subsection*{Different initial solvers}
+	What becomes apparent is the fact, that the results of ode23 and ode15s start to visibly diverge from the result of ode45 after a few seconds. The offset increases, the longer our simulation takes to compute.\newline
+	The result of ode89 is visibly almost identical to the result of ode45 throughout the entire simulation run. 
 	\section*{Exercise 1d): Documenting our work and problems using the solvers}
 	We consider this task to be fulfilled as we documented our work right here with this protocol.
 		
