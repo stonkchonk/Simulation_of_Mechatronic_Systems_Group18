@@ -8,7 +8,7 @@ t.end = 10;         % end time
 p.L0 = 0.5; p.v0 = 0; p.fi0 = 0; p.dfi0 = 0; initialState = [p.L0;p.v0;p.fi0;p.dfi0]; disp("Sim 1: "); disp(p); % set new parameters
 [t1,y1] = ode45(@pendulumDgl,[t.start t.end],initialState,[],p);    % Simulation with ode45
 
-p.L0 = 0.5; p.v0 = 2; p.fi0 = 0; p.dfi0 = 0; initialState = [p.L0;p.v0;p.fi0;p.dfi0]; disp("Sim 2: "); disp(p);
+p.L0 = 0.5; p.v0 = 0; p.fi0 = pi/4; p.dfi0 = 0; initialState = [p.L0;p.v0;p.fi0;p.dfi0]; disp("Sim 2: "); disp(p);
 [t2,y2] = ode45(@pendulumDgl,[t.start t.end],initialState,[],p);
 
 p.L0 = 0.1; p.v0 = 0; p.fi0 = pi/4; p.dfi0 = 0; initialState = [p.L0;p.v0;p.fi0;p.dfi0]; disp("Sim 3: "); disp(p);
@@ -22,25 +22,25 @@ p.L0 = 0.5; p.v0 = 1; p.fi0 = pi/4; p.dfi0 = pi/4; initialState = [p.L0;p.v0;p.f
 figure(1)
 subplot(2,2,1)
 plot(t1,y1(:,1),t2,y2(:,1),t3,y3(:,1),t4,y4(:,1))
-title("position x"); xlabel("t [s]"); legend("sim_1","sim_2","sim_3","sim_4")
+title("spring length L"); xlabel("t [s]"); legend("sim_1","sim_2","sim_3","sim_4")
 penduluPath(y1);
 
 figure(1)
 subplot(2,2,2)
 plot(t1,y1(:,2),t2,y2(:,2),t3,y3(:,2),t4,y4(:,2))
-title("velocity v"); xlabel("t [s]"); legend("sim_1","sim_2","sim_3","sim_4")
+title("spring velocity dL"); xlabel("t [s]"); legend("sim_1","sim_2","sim_3","sim_4")
 penduluPath(y2);
 
 figure(1)
 subplot(2,2,3)
 plot(t1,y1(:,3),t2,y2(:,3),t3,y3(:,3),t4,y4(:,3))
-title("angular position φ"); xlabel("t [s]"); legend("sim_1","sim_2","sim_3","sim_4")
+title("angular displacement $\varphi$", 'Interpreter','latex'); xlabel("t [s]"); legend("sim_1","sim_2","sim_3","sim_4")
 penduluPath(y3);
 
 figure(1)
 subplot(2,2,4)
 plot(t1,y1(:,4),t2,y2(:,4),t3,y3(:,4),t4,y4(:,4))
-title("position dφ"); xlabel("t [s]"); legend("sim_1","sim_2","sim_3","sim_4")
+title("angular velocity d$\varphi$", 'Interpreter','latex'); xlabel("t [s]"); legend("sim_1","sim_2","sim_3","sim_4")
 penduluPath(y4);
 
 
