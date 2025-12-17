@@ -1,0 +1,86 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{float}
+\geometry{margin=1.8cm}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstdefinestyle{matlabstyle}{
+	language=Matlab,
+	basicstyle=\ttfamily\small,
+	numbers=left,
+	numberstyle=\tiny,
+	backgroundcolor=\color{gray!5},
+	frame=single,
+	keywordstyle=\color{blue},
+	commentstyle=\color{green!50!black},
+	stringstyle=\color{orange},
+	breaklines=true
+}
+
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks=true,
+	linkcolor=blue,
+	filecolor=magenta,      
+	urlcolor=cyan,
+	pdftitle={Overleaf Example},
+	pdfpagemode=FullScreen,
+}
+
+
+\title{Simulation of Mechatronic Systems \\\large Exercise 3 protocol}
+\IfFileExists{authors.tex}{
+	\input{authors} % this pulls in authors.tex
+}{
+	\author{please create an authors.tex file}
+}
+
+\begin{document}
+	\maketitle
+	\section*{Exercise 3a): Simulating the step response of a transfer function}
+	In the first sub task of this exercise, we want to simulate the step response of the transfer-function \textbf{PT1} which can be defined as follows:\newline
+	\begin{equation}\label{eqPT1}
+			G(s)=\frac{K}{1+T*s}
+	\end{equation}
+	\noindent
+	Hereby, variables $K$ and $T$ are to be defined as $K=5$ and $T=4$. Furthermore, the differential equation of \textbf{PT1} is given as follows:\newline
+	\begin{equation}\label{diffEqPT1}
+		\dot{x}=\frac{1}{T}(K*u-x)
+	\end{equation}
+	\noindent
+	Now that this has been established, we can build equation \ref{diffEqPT1} within Simulink which yields the following model:
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\linewidth]{simulink_3a.png}
+		\caption{Differential equation of \textbf{PT1} conveyed as Simulink model.}
+		\label{fig:simulink3a}
+	\end{figure}
+	\noindent
+	As shown in the figure above, the value of $u$ gets simulated by a step block. Both simulated values of $u$ and $x$ get forwarded to the scope block, which lets us examine their values within a Matlab script. Something that is not directly apparent from the graphic is the simulation run time, which has been set to 50 seconds.\newline
+	Within our Matlab code, we can set and access the Simulink simulation as demonstrated in the code snippet below:\newline\newpage
+	\noindent
+	\textbf{Matlab Code Snippet:}
+	\lstinputlisting[style=matlabstyle, linerange={1, 3-9, 37-39, 44-49}]{../a_exercise3.m}
+	Hereby, we can access concrete scope variables using \texttt{plotG1\_De}, a logging value which has been defined within our Simulink model and is not directly apparent from any graphic.\newline
+	The plot code of the step response yields the following graphic \ref{fig:plotStepResponse}:
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\linewidth]{stepResponse3aDiffEq.pdf}
+		\caption{Step response of our Simulink model plotted within Matlab.}
+		\label{fig:plotStepResponse}
+	\end{figure}
+	\noindent
+	As expected, the output \texttt{out} of the step function \textbf{PT1} converges at a value of 5, which corresponds to the value of parameter $K$.
+	
+	\section*{Exercise 3b): Building a one-mass system in Simulink}
+	
+	
+	\section*{Exercise 3c): Building and optimizing a two-mass system in Simulink}
+		
+\end{document}
