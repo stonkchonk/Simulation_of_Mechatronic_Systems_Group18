@@ -40,7 +40,7 @@ out1 = sim('exercise3_SIM');                             % simulate the system w
 figure()
 plot(out1.plotG1_Tf.time,out1.plotG1_Tf.signals(1).values,...       % Plot the result of the simulation in simulink (transfer function)
     out1.plotG1_Tf.time,out1.plotG1_Tf.signals(2).values)
-grid on, xlabel('Time [sec]');legend('step','out'); title('step response tranfer function SIMULINK');
+grid on, xlabel('Time [sec]');legend('step','out'); title('step response transfer function SIMULINK');
 
 figure()
 plot(out1.plotG1_De.time,out1.plotG1_De.signals(1).values,...       % Plot the result of the simulation in simulink (differential equation)
@@ -57,13 +57,71 @@ grid on, xlabel('Time [sec]');legend('step','out'); title('step response differe
 initialState1 = [0;0];                % set the initial state for the ode solver
 [t2,y2] = ode45(@(t,z) massDgl(t,z,par2),[par2.t.start par2.t.stop],initialState1);    % ode solve of the differential equation exercise b
 
-out2 = sim("exercise3_SIM.slx");      % get simulation data from simulink of differential equation exercise 2
 
-plot(t2,y2)                            % plot the result
-grid on, xlabel('Time [sec]');legend('x','v'); title('mass step response ODE45');
+out2 = sim("exercise3_SIM.slx");      % step response with initial parameters
+timeInitial = out2.plotE2.time;
+stepResponseInitial = out2.plotE2.signals(2).values;
 
-plot(out2.plotE2.time,out2.plotE2.signals(2).values)
-grid on, xlabel('Time [sec]');legend('x'); title('mass step response SIMULINK');
+par2.m = 7;     % reduced mass m
+out2 = sim("exercise3_SIM.slx");
+timeReducedM = out2.plotE2.time;
+stepResponseReducedM = out2.plotE2.signals(2).values;
+
+par2.m = 13;    % increased mass m
+out2 = sim("exercise3_SIM.slx");
+timeIncreasedM = out2.plotE2.time;
+stepResponseIncreasedM = out2.plotE2.signals(2).values;
+par2.m = 10; % revert m to initial
+
+par2.D = 2;    % reduced damper constant D
+out2 = sim("exercise3_SIM.slx");
+timeReducedD = out2.plotE2.time;
+stepResponseReducedD = out2.plotE2.signals(2).values;
+
+par2.D = 4;    % increased damper constant D
+out2 = sim("exercise3_SIM.slx");
+timeIncreasedD = out2.plotE2.time;
+stepResponseIncreasedD = out2.plotE2.signals(2).values;
+par2.D = 3; % revert D to initial
+
+par2.C = 90;    % reduced spring constant C
+out2 = sim("exercise3_SIM.slx");
+timeReducedC = out2.plotE2.time;
+stepResponseReducedC = out2.plotE2.signals(2).values;
+
+par2.C = 110;    % increased spring constant C
+out2 = sim("exercise3_SIM.slx");
+timeIncreasedC = out2.plotE2.time;
+stepResponseIncreasedC = out2.plotE2.signals(2).values;
+par2.C = 100; % revert C to initial
+
+% plot comparing different masses
+figure(21);
+plot(timeInitial, stepResponseInitial, ...
+    timeReducedM, stepResponseReducedM, ...
+    timeIncreasedM, stepResponseIncreasedM)
+grid on, xlabel('Time [sec]'), ylabel('x [m]');
+legend('10kg', '7kg', '13kg'); 
+title('step response SIMULINK, physical property: m');
+
+% plot comparing different damper constants
+figure(22);
+plot(timeInitial, stepResponseInitial, ...
+    timeReducedD, stepResponseReducedD, ...
+    timeIncreasedD, stepResponseIncreasedD)
+grid on, xlabel('Time [sec]'), ylabel('x [m]');
+legend('3Ns/m', '2Ns/m', '4Ns/m'); 
+title('step response SIMULINK, physical property: D');
+
+% plot comparing different spring constants
+figure(23);
+plot(timeInitial, stepResponseInitial, ...
+    timeReducedC, stepResponseReducedC, ...
+    timeIncreasedC, stepResponseIncreasedC)
+grid on, xlabel('Time [sec]'), ylabel('x [m]');
+legend('100N/m', '90N/m', '110N/m'); 
+title('step response SIMULINK, physical property: C');
+
 
 % differential equation exercise b
 function [dz] = massDgl(t,z,par2)

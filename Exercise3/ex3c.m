@@ -10,11 +10,13 @@ par3.t.start = 0;       % start simulation time [s]
 par3.t.stop = 1000;     % stop simulation time [s]
 
 % define upper bounds for damper and spring
-maxDamper = 15;
-maxSpring = 15;
-areaUnderCurve = zeros(maxDamper, maxSpring); % area under squared curve matrix for different values
-for damperConst = 1:maxDamper % iterating over damper value from 1 to 15
-    for springConst = 1:maxSpring % iterating over spring value from 1 to 15
+maxDamperIdx = 15;
+maxSpringIdx = 15;
+areaUnderCurve = zeros(maxDamperIdx, maxSpringIdx); % area under squared curve matrix for different values
+for damperConstIterator = 1:maxDamperIdx % iterating over damper value from 1 to 15
+    for springConstIterator = 1:maxSpringIdx % iterating over spring value from 1 to 15
+        damperConst = damperConstIterator / 10;
+        springConst = springConstIterator / 10;
         fprintf('damper: %g N*s/m, spring: %g N/m\n', damperConst, springConst); % log current values
         par3.D2 = damperConst; % update damper value
         par3.C2 = springConst;  % update spring value
@@ -24,7 +26,7 @@ for damperConst = 1:maxDamper % iterating over damper value from 1 to 15
         x1 = out3c.x1x2.signals(1).values; % x1 oscillation curve
         x2 = out3c.x1x2.signals(2).values; % x2 oscillation curve
         area = trapz(time, x1.^2); % area under x1 squared curve 
-        areaUnderCurve(damperConst, springConst) = area;
+        areaUnderCurve(damperConstIterator, springConstIterator) = area;
     end
 end
 
@@ -39,9 +41,12 @@ title('Optimization graphic for different damper/spring constants')
 colorbar;
 
 [minVal, linIdx] = min(areaUnderCurve(:)); % extract minimum value
-[optimalDamper, optimalSpring] = ind2sub(size(areaUnderCurve), linIdx); % optimized values
-fprintf('optimal damper: %g N*s/m, optimal spring: %g N/m\n', optimalDamper, optimalSpring);
+[row, col] = ind2sub(size(areaUnderCurve), linIdx); % optimized values
 % run simulation again with otimized values for plotting purposes
+fprintf('optimal row: %g, optimal col: %g\n', row, col);
+optimalDamper = row*0.1;
+optimalSpring = col*0.1;
+fprintf('optimal damper: %g N*s/m, optimal spring: %g N/m\n', optimalDamper, optimalSpring);
 par3.D2 = optimalDamper; % update damper value
 par3.C2 = optimalSpring;  % update spring value
 out3c = sim('ex3c_simulink.slx'); % simulate the system

@@ -45,42 +45,121 @@
 	\section*{Exercise 3a): Simulating the step response of a transfer function}
 	In the first sub task of this exercise, we want to simulate the step response of the transfer-function \textbf{PT1} which can be defined as follows:\newline
 	\begin{equation}\label{eqPT1}
-			G(s)=\frac{K}{1+T*s}
+			G(s)=\frac{K}{1+T\cdot s}
 	\end{equation}
 	\noindent
 	Hereby, variables $K$ and $T$ are to be defined as $K=5$ and $T=4$. Furthermore, the differential equation of \textbf{PT1} is given as follows:\newline
 	\begin{equation}\label{diffEqPT1}
-		\dot{x}=\frac{1}{T}(K*u-x)
+		\dot{x}=\frac{1}{T}(K\cdot u-x)
 	\end{equation}
 	\noindent
-	Now that this has been established, we can build equation \ref{diffEqPT1} within Simulink which yields the following model:
+	Now that this has been established, we can build both equations \ref{eqPT1} and \ref{diffEqPT1} within Simulink which yields the following models:
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.8\linewidth]{simulink_3a.png}
+		\includegraphics[width=1.0\linewidth]{3aStepModel.png}
+		\caption{Step equation of \textbf{PT1} conveyed as Simulink model.}
+		\label{fig:stepEqModel}
+	\end{figure}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1.0\linewidth]{3aStepInner.png}
+		\caption{Inner workings of the G1 block of the step equation Simulink model as shown in figure \ref{fig:stepEqModel}.}
+		\label{fig:stepEqInner}
+	\end{figure}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1.0\linewidth]{diffEqModel.png}
 		\caption{Differential equation of \textbf{PT1} conveyed as Simulink model.}
-		\label{fig:simulink3a}
+		\label{fig:diffEqModel}
 	\end{figure}
 	\noindent
-	As shown in the figure above, the value of $u$ gets simulated by a step block. Both simulated values of $u$ and $x$ get forwarded to the scope block, which lets us examine their values within a Matlab script. Something that is not directly apparent from the graphic is the simulation run time, which has been set to 50 seconds.\newline
-	Within our Matlab code, we can set and access the Simulink simulation as demonstrated in the code snippet below:\newline\newpage
+	As shown in figure \ref{fig:diffEqModel} above, the value of $u$ gets simulated by a step block. Both simulated values of $u$ and $x$ get forwarded to the scope block, which lets us examine their values within a Matlab script. Something that is not directly apparent from the graphic is the simulation run time, which has been set to 50 seconds.\newline
+	Within our Matlab code, we can set and access the Simulink simulation as demonstrated in the code snippet below:\newline\newline
 	\noindent
 	\textbf{Matlab Code Snippet:}
-	\lstinputlisting[style=matlabstyle, linerange={1, 3-9, 37-39, 44-49}]{../a_exercise3.m}
-	Hereby, we can access concrete scope variables using \texttt{plotG1\_De}, a logging value which has been defined within our Simulink model and is not directly apparent from any graphic.\newline
-	The plot code of the step response yields the following graphic \ref{fig:plotStepResponse}:
+	\lstinputlisting[style=matlabstyle, linerange={1, 3-9, 37-49}]{../a_exercise3.m}
+	Hereby, we can access concrete scope variables using \texttt{plotG1\_Tf} and \texttt{plotG1\_De}, a logging value which has been defined within our Simulink models and is not directly apparent from any graphic.\newline
+	The plot code of the step response yields the following graphics \ref{fig:plotStepResponse1} and \ref{fig:plotStepResponse2}:
 	
 	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.8\linewidth]{stepResponse3aDiffEq.pdf}
+		\includegraphics[width=0.7\linewidth]{stepResponse3aDiffEq.pdf}
 		\caption{Step response of our Simulink model plotted within Matlab.}
-		\label{fig:plotStepResponse}
+		\label{fig:plotStepResponse1}
+	\end{figure}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.7\linewidth]{stepResponse3aStepEq.pdf}
+		\caption{Step response of our Simulink model plotted within Matlab.}
+		\label{fig:plotStepResponse2}
 	\end{figure}
 	\noindent
-	As expected, the output \texttt{out} of the step function \textbf{PT1} converges at a value of 5, which corresponds to the value of parameter $K$.
+	As expected, the output \texttt{out} of the step function \textbf{PT1} converges at a value of 5, which corresponds to the value of parameter $K$. Also, the output of both models is identical which also corresponds to the expected result.\newpage
 	
 	\section*{Exercise 3b): Building a one-mass system in Simulink}
+	Next, we want to simulate a one mass spring system and investigate the influence of the physical parameters on the simulation result. The physical system is illustrated with the following graphic below:\newline
 	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.6\linewidth]{oneMass.png}
+		\caption{One-mass spring/damper system with some physical characteristics.}
+		\label{fig:oneMass}
+	\end{figure}
+	\noindent
+	Hereby the movement can be described with the following differential equation which is already given by the exercise description as follow:\newline
+	
+	\begin{equation}\label{oneMass}
+		m\cdot \ddot{x}=-C\cdot x-D\cdot \dot{x}+F(t)
+	\end{equation}
+	\noindent
+	The initial values are defined as $m=10kg$, $C=100\frac{N}{m}$ and $D=3\frac{Ns}{m}$. Using equation \ref{oneMass} we can build our model in Simulink which looks like this:
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1.0\linewidth]{oneMassModel.png}
+		\caption{Differential equation of one-mass spring/damper system conveyed as Simulink model.}
+		\label{fig:oneMassSimulink}
+	\end{figure}
+	\noindent
+	This model uses two integrator blocks to depict signals of $\ddot{x}$, $\dot{x}$ and $\dot{x}$ whose outputs get multiplied by their corresponding gain blocks. Furthermore, the initial force $F(t)$ is simulated by a step block. \newline
+	To investigate the influence of physical parameters on the simulation result, we are at first going to run the simulation with its initial values. Then, for each physical property we are going to execute the simulation twice, once with a decreased and once with an increased value, so that only one property changes at a time. For $m$, $D$ and $C$ this yields the following plots:\newline
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.7\linewidth]{stepM.pdf}
+		\caption{Step response with different values for mass.}
+		\label{fig:stepM}
+	\end{figure}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.7\linewidth]{stepD.pdf}
+		\caption{Step response with different values for the damper constant.}
+		\label{fig:stepD}
+	\end{figure}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.7\linewidth]{stepC.pdf}
+		\caption{Step response with different values for the spring constant.}
+		\label{fig:stepC}
+	\end{figure}
+	\noindent
+	\textbf{Influence of mass (m):} As shown in figure \ref{fig:stepM}, changing the mass influences oscillation amplitude and interval. A reduced mass leads to shorter interval and smaller amplitude, while a mass increase leads to longer interval and larger amplitude.\newline
+	\textbf{Influence of damper constant (D):} As shown in figure \ref{fig:stepD}, changing the damper constant influences only the amplitude, more specifically the rate of amplitude decrease over time. A reduced damper constant leads to a slower decrease of amplitude over time, while an increased damper constant leads to a faster decrease of amplitude over time. The oscillation interval is not being influenced by the damper value.\newline
+	\textbf{Influence of spring constant (C):} As shown in figure \ref{fig:stepC}, changing the spring constant influences the value to which $x$ converges towards. A reduced spring constant leads to a larger convergent value of $x$, while an increased spring constant leads to a smaller convergent value of $x$.\newline\newline
+	\noindent
+	The Matlab code for generating these plots and running the simulation is provided in the snippet below.\newline
+	\textbf{Matlab code snippet:}\newline
+	\lstinputlisting[style=matlabstyle, linerange={56, 61-124}]{../a_exercise3.m}
+	\newpage
 	
 	\section*{Exercise 3c): Building and optimizing a two-mass system in Simulink}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.7\linewidth]{twoMassSketch.png}
+		\caption{Two-mass spring/damper system with some physical characteristics.}
+		\label{fig:twoMassSketch}
+	\end{figure}
+	\noindent
+	The model to be simulated is illustrated in figure \ref{fig:twoMassSketch} above.
 		
 \end{document}
