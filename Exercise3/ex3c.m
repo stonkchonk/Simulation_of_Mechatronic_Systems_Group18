@@ -7,16 +7,14 @@ par3.C1 = 15;           % spring value [N/m]
 par3.C2 = 0;            % spring value [N/m]
 par3.D2 = 0;            % damper value [N*s/m]
 par3.t.start = 0;       % start simulation time [s]
-par3.t.stop = 1000;     % stop simulation time [s]
+par3.t.stop = 300;     % stop simulation time [s]
 
-% define upper bounds for damper and spring
-maxDamperIdx = 15;
-maxSpringIdx = 15;
-areaUnderCurve = zeros(maxDamperIdx, maxSpringIdx); % area under squared curve matrix for different values
-for damperConstIterator = 1:maxDamperIdx % iterating over damper value from 1 to 15
-    for springConstIterator = 1:maxSpringIdx % iterating over spring value from 1 to 15
-        damperConst = damperConstIterator / 10;
-        springConst = springConstIterator / 10;
+% define damper and spring constant ranges
+damperRange = 0.1:0.1:1.5; % [N*s/m]
+springRange = 0.1:0.1:1.5; % [N/m]
+areaUnderCurve = zeros(size(damperRange,2), size(springRange,2)); % area under squared curve matrix for different values
+for damperConst = damperRange % iterate over damper value
+    for springConst = springRange % iterate over spring value
         fprintf('damper: %g N*s/m, spring: %g N/m\n', damperConst, springConst); % log current values
         par3.D2 = damperConst; % update damper value
         par3.C2 = springConst;  % update spring value
@@ -26,14 +24,14 @@ for damperConstIterator = 1:maxDamperIdx % iterating over damper value from 1 to
         x1 = out3c.x1x2.signals(1).values; % x1 oscillation curve
         x2 = out3c.x1x2.signals(2).values; % x2 oscillation curve
         area = trapz(time, x1.^2); % area under x1 squared curve 
-        areaUnderCurve(damperConstIterator, springConstIterator) = area;
+        areaUnderCurve(int32(damperConst*10), int32(springConst*10)) = area; % store area in matrix
     end
 end
 
 % plot for area under curve for different damper/spring constants
 disp(areaUnderCurve);
 figure(1);
-surf(areaUnderCurve);
+surf(damperRange, springRange, areaUnderCurve);
 xlabel('D2 damper value [N*s/m]')
 ylabel('C2 spring value [N/m]')
 zlabel('Area under squared x1 curve')
@@ -41,9 +39,10 @@ title('Optimization graphic for different damper/spring constants')
 colorbar;
 
 [minVal, linIdx] = min(areaUnderCurve(:)); % extract minimum value
-[row, col] = ind2sub(size(areaUnderCurve), linIdx); % optimized values
+[row, col] = ind2sub(size(areaUnderCurve), linIdx); % optimal row, col of matrix
 % run simulation again with otimized values for plotting purposes
 fprintf('optimal row: %g, optimal col: %g\n', row, col);
+% actual optimal values derived from optial row, col
 optimalDamper = row*0.1;
 optimalSpring = col*0.1;
 fprintf('optimal damper: %g N*s/m, optimal spring: %g N/m\n', optimalDamper, optimalSpring);

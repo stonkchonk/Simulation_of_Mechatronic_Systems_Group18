@@ -121,7 +121,7 @@
 		\label{fig:oneMassSimulink}
 	\end{figure}
 	\noindent
-	This model uses two integrator blocks to depict signals of $\ddot{x}$, $\dot{x}$ and $\dot{x}$ whose outputs get multiplied by their corresponding gain blocks. Furthermore, the initial force $F(t)$ is simulated by a step block. \newline
+	This model uses two integrator blocks to depict signals of $\ddot{x}$, $\dot{x}$ and $x$ whose outputs get multiplied by their corresponding gain blocks. Furthermore, the initial force $F(t)$ is simulated by a step block. \newline
 	To investigate the influence of physical parameters on the simulation result, we are at first going to run the simulation with its initial values. Then, for each physical property we are going to execute the simulation twice, once with a decreased and once with an increased value, so that only one property changes at a time. For $m$, $D$ and $C$ this yields the following plots:\newline
 	
 	\begin{figure}[H]
@@ -160,6 +160,57 @@
 		\label{fig:twoMassSketch}
 	\end{figure}
 	\noindent
-	The model to be simulated is illustrated in figure \ref{fig:twoMassSketch} above.
+	The model to be simulated is illustrated in figure \ref{fig:twoMassSketch} above. This system possesses five physical properties, of which some are already specified. The specified values are $C_1 = 15\frac{N}{m}$, $m_1=100kg$ and  $m_2=10kg$. The unspecified values are the spring constant $C_2$ and the damper constant $D_2$. These two values need to be optimized as such, that the oscillation of the entire system, more specifically the oscillation of $m_1$ gets minimized. \newline
+	From this visual model, we can derive the differential movement equations for $m_1$ and $m_2$ as follows:\newline
+	
+	\begin{equation}\label{twoMassDiffEqM1}
+		m_1\ddot{x}_1 = -C_1x_1 + C_2(x_2-x_1) + D_2(\dot{x}_2-\dot{x}_1)
+	\end{equation}
+	\begin{equation}\label{twoMassDiffEqM2}
+		m_2\ddot{x}_2 = C_2(x_1-x_2) + D_2(\dot{x}_1-\dot{x}_2)
+	\end{equation}
+	\noindent
+	Using equation \ref{twoMassDiffEqM1} and \ref{twoMassDiffEqM2} we can build our model in Simulink which looks like this:\newline
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1.0\linewidth]{twoMassModel.png}
+		\caption{Differential equation of two-mass spring/damper system conveyed as Simulink model.}
+		\label{fig:twoMassModelSimulink}
+	\end{figure}
+	\noindent
+	This model uses four integrator blocks to depict signals of $\ddot{x}_1$, $\dot{x}_1$, $x_1$, $\ddot{x}_2$, $\dot{x}_2$ and $x_2$ whose outputs get multiplied by their corresponding gain blocks and added together to form the sums of acting forces on $m_1$ and $m_2$. Furthermore, an initial force $F(t)$, simulated by a step block, gets added to the sum of forces acting upon $m_1$. This force is not part of our visual model, however we are using it to get our system into motion.\newline
+	To elaborate, how optimal values for $C_2$ and $D_2$ are to be determined, we are going to take a closer look at the corresponding Matlab code.\newline\newline
+	\textbf{Matlab code snippet:}
+	\lstinputlisting[style=matlabstyle]{../ex3c.m}
+	\begin{enumerate}
+		\item First of all, we initialize the known physical properties with their values. The unknown properties get assigned a zero value.
+		\item Next, we define range vectors for the damper and spring constants which we want to test. Both values should range from 0.1 to 1.5 with a step size of 0.1.
+		\item After that we define an initially filled with zeros 15 by 15 matrix \texttt{areaUnderCurve}, which shall store the results of each test value combination.
+		\item Now we test each value combination by iterating over both range vectors using nested for-loops. For each combination, the following steps are performed:
+		\begin{enumerate}
+			\item Assign the current values to the simulation parameters and run the simulation with them.
+			\item Extract the simulation results, specifically the run time-frame and result vectors for $x_1$ and $x_2$ positions.
+			\item Calculate and store the area under the squared $x_1$ curve. For this we use the inbuilt \texttt{trapz} function.
+		\end{enumerate}
+		\item Now that that all value combinations have been tested, we can generate a surface plot of \texttt{areaUnderCurve}. Furthermore, we extract the optimal row, col where the value is minimal.
+		\item From this, we can determine optimal values for $C_2$ and $D_2$ and generate a plot sowing the optimal result. 
+	\end{enumerate}
+	From this we can determine \textbf{the optimal values, which are $C_2=1.3\frac{N}{m}$ and $D_2=1.1\frac{Ns}{m}$.} The above mentioned plots are illustrated below in figures \ref{fig:surface} and \ref{fig:optimized}:\newline
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\linewidth]{surface.pdf}
+		\caption{Area under squared $x_1$-curve for all tested combinations of $C_2$ and $D_2$.}
+		\label{fig:surface}
+	\end{figure}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\linewidth]{optimized.pdf}
+		\caption{Oscillations of $m_1$ and $m_2$ with optimal parameters $C_2$ and $D_2$ over a time frame of 300 seconds.}
+		\label{fig:optimized}
+	\end{figure}
+	\noindent
+	Hereby we assume that the minimum area under the curve corresponds to the optimally damped model, because a smaller area corresponds to a faster converging $x_1$-curve. The absolute area value itself does not posses any relevant meaning for our purposes. 
 		
 \end{document}
