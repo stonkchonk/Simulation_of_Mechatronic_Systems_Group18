@@ -11,4 +11,9 @@ Exercise2/protocol/protocol2.pdf
 Exercise3/protocol/authors.tex
 Exercise3/protocol/protocol3.pdf
 
+Exercise4/protocol/authors.tex
+Exercise4/protocol/protocol4.pdf
+
 *.asv
+*.r20*
+*.slxc
