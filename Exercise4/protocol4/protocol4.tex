@@ -85,14 +85,14 @@
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=1.0\linewidth]{step_response_4a.pdf}
-		\caption{Open loop model of a dc-motor.}
+		\caption{Step response of an open loop model of a dc-motor.}
 		\label{fig:stepResponse4a}
 	\end{figure}
 	\noindent
 	As show above in figure \ref{fig:stepResponse4a} both $i(t)$ and $\omega(t)$ converge towards a steady value after about 0.005 seconds. Now that we have a working open loop model of a dc-motor, we can continue on to optimize it with a simple speed controller.
 	\newpage
 	
-	\section*{Exercise 3b): Changing parameters of the controller to get a good control behavior}
+	\section*{Exercise 4b): Changing parameters of the controller to get a good control behavior}
 	Within the exercise description, there is already an illustration of a dc-motor that uses the output value $\omega$ to influence a controller $K_P$ which then again influences the input voltage $u$. This is displayed below in figure \ref{fig:dcMotorSpeedControl}:
 	\begin{figure}[H]
 		\centering
@@ -100,7 +100,10 @@
 		\caption{Model of a dc-motor hooked up to a speed controller $K_P$.}
 		\label{fig:dcMotorSpeedControl}
 	\end{figure}
+	\noindent
 	Now, we build this model within Simulink which is shown below in figure \ref{fig:dcMotorSpeedControlSimulink}:
+	\newline\newline
+	\textbf{Simulink Model:}
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=1.0\linewidth]{closedLoopDcMotor.png}
@@ -108,172 +111,44 @@
 		\label{fig:dcMotorSpeedControlSimulink}
 	\end{figure}
 	\noindent
-	Hereby our speed controller simply consists of a gain block which multiplies the output angular speed $\omega$ by a factor $K_P$ and adds that to the input voltage $u$. A good control behavior is accomplished when the motor converges towards a steady angular speed $\omega$ and current $i$ as fast as possible. Without controller the motor takes about 0.005 seconds, as determined in the previous subtask. 
-	
-	\noindent
-	Hereby, variables $K$ and $T$ are to be defined as $K=5$ and $T=4$. Furthermore, the differential equation of \textbf{PT1} is given as follows:\newline
-	\begin{equation}\label{diffEqPT1}
-		\dot{x}=\frac{1}{T}(K\cdot u-x)
-	\end{equation}
-	\noindent
-	Now that this has been established, we can build both equations \ref{eqPT1} and \ref{diffEqPT1} within Simulink which yields the following models:
-	\begin{figure}[H]
-		\centering
-		%\includegraphics[width=1.0\linewidth]{3aStepModel.png}
-		\caption{Step equation of \textbf{PT1} conveyed as Simulink model.}
-		\label{fig:stepEqModel}
-	\end{figure}
-	\begin{figure}[H]
-		\centering
-		%\includegraphics[width=1.0\linewidth]{3aStepInner.png}
-		\caption{Inner workings of the G1 block of the step equation Simulink model as shown in figure \ref{fig:stepEqModel}.}
-		\label{fig:stepEqInner}
-	\end{figure}
-	\begin{figure}[H]
-		\centering
-		%\includegraphics[width=1.0\linewidth]{diffEqModel.png}
-		\caption{Differential equation of \textbf{PT1} conveyed as Simulink model.}
-		\label{fig:diffEqModel}
-	\end{figure}
-	\noindent
-	As shown in figure \ref{fig:diffEqModel} above, the value of $u$ gets simulated by a step block. Both simulated values of $u$ and $x$ get forwarded to the scope block, which lets us examine their values within a Matlab script. Something that is not directly apparent from the graphic is the simulation run time, which has been set to 50 seconds.\newline
-	Within our Matlab code, we can set and access the Simulink simulation as demonstrated in the code snippet below:\newline\newline
+	Hereby our speed controller simply consists of a gain block which multiplies the output angular speed $\omega$ by a factor $K_P$ and adds that to the input voltage $u$. A good control behavior is accomplished when the motor converges towards a steady angular speed $\omega$ and current $i$ as fast as possible. Without controller the motor takes about 0.005 seconds, as determined in the previous sub task. \newline
+	This Simulink model gets called upon in the Matlab script as stated below:\newline\newline
 	\noindent
 	\textbf{Matlab Code Snippet:}
-	%\lstinputlisting[style=matlabstyle, linerange={1, 3-9, 37-49}]{../a_exercise3.m}
-	Hereby, we can access concrete scope variables using \texttt{plotG1\_Tf} and \texttt{plotG1\_De}, a logging value which has been defined within our Simulink models and is not directly apparent from any graphic.\newline
-	The plot code of the step response yields the following graphics \ref{fig:plotStepResponse1} and \ref{fig:plotStepResponse2}:
-	
+	\lstinputlisting[style=matlabstyle]{../exercise4 sudeesh/exercise4reab.m}
+	\noindent
+	The value $K_P$ is chosen as $K_P=0.05$ with which the closed loop model gets called. This yields a much faster convergence of $i(t)$ and $\omega(t)$ compared to the open loop system without controller. The resulting plot can be seen below in figure \ref{fig:stepResponse4b}. Within just 0.001 seconds the system reaches a state of convergence, so that $i(t)$ and $\omega(t)$ remain constant. This equates to a time span which is five times shorter compared to the unregulated system.
 	\begin{figure}[H]
 		\centering
-		%\includegraphics[width=0.7\linewidth]{stepResponse3aDiffEq.pdf}
-		\caption{Step response of our Simulink model plotted within Matlab.}
-		\label{fig:plotStepResponse1}
-	\end{figure}
-	\begin{figure}[H]
-		\centering
-		%\includegraphics[width=0.7\linewidth]{stepResponse3aStepEq.pdf}
-		\caption{Step response of our Simulink model plotted within Matlab.}
-		\label{fig:plotStepResponse2}
+		\includegraphics[width=1.0\linewidth]{step_response_4b.pdf}
+		\caption{Step response of a closed loop model of a dc-motor.}
+		\label{fig:stepResponse4b}
 	\end{figure}
 	\noindent
-	As expected, the output \texttt{out} of the step function \textbf{PT1} converges at a value of 5, which corresponds to the value of parameter $K$. Also, the output of both models is identical which also corresponds to the expected result.\newpage
-	
-	\section*{Exercise 3b): Building a one-mass system in Simulink}
-	Next, we want to simulate a one mass spring system and investigate the influence of the physical parameters on the simulation result. The physical system is illustrated with the following graphic below:\newline
-	
-	\begin{figure}[H]
-		\centering
-		%\includegraphics[width=0.6\linewidth]{oneMass.png}
-		\caption{One-mass spring/damper system with some physical characteristics.}
-		\label{fig:oneMass}
-	\end{figure}
-	\noindent
-	Hereby the movement can be described with the following differential equation which is already given by the exercise description as follow:\newline
-	
-	\begin{equation}\label{oneMass}
-		m\cdot \ddot{x}=-C\cdot x-D\cdot \dot{x}+F(t)
-	\end{equation}
-	\noindent
-	The initial values are defined as $m=10kg$, $C=100\frac{N}{m}$ and $D=3\frac{Ns}{m}$. Using equation \ref{oneMass} we can build our model in Simulink which looks like this:
-	
-	\begin{figure}[H]
-		\centering
-		%\includegraphics[width=1.0\linewidth]{oneMassModel.png}
-		\caption{Differential equation of one-mass spring/damper system conveyed as Simulink model.}
-		\label{fig:oneMassSimulink}
-	\end{figure}
-	\noindent
-	This model uses two integrator blocks to depict signals of $\ddot{x}$, $\dot{x}$ and $x$ whose outputs get multiplied by their corresponding gain blocks. Furthermore, the initial force $F(t)$ is simulated by a step block. \newline
-	To investigate the influence of physical parameters on the simulation result, we are at first going to run the simulation with its initial values. Then, for each physical property we are going to execute the simulation twice, once with a decreased and once with an increased value, so that only one property changes at a time. For $m$, $D$ and $C$ this yields the following plots:\newline
-	
-	\begin{figure}[H]
-		\centering
-		%\includegraphics[width=0.7\linewidth]{stepM.pdf}
-		\caption{Step response with different values for mass.}
-		\label{fig:stepM}
-	\end{figure}
-	\begin{figure}[H]
-		\centering
-		%\includegraphics[width=0.7\linewidth]{stepD.pdf}
-		\caption{Step response with different values for the damper constant.}
-		\label{fig:stepD}
-	\end{figure}
-	\begin{figure}[H]
-		\centering
-		%\includegraphics[width=0.7\linewidth]{stepC.pdf}
-		\caption{Step response with different values for the spring constant.}
-		\label{fig:stepC}
-	\end{figure}
-	\noindent
-	\textbf{Influence of mass (m):} As shown in figure \ref{fig:stepM}, changing the mass influences oscillation amplitude and interval. A reduced mass leads to shorter interval and smaller amplitude, while a mass increase leads to longer interval and larger amplitude.\newline
-	\textbf{Influence of damper constant (D):} As shown in figure \ref{fig:stepD}, changing the damper constant influences only the amplitude, more specifically the rate of amplitude decrease over time. A reduced damper constant leads to a slower decrease of amplitude over time, while an increased damper constant leads to a faster decrease of amplitude over time. The oscillation interval is not being influenced by the damper value.\newline
-	\textbf{Influence of spring constant (C):} As shown in figure \ref{fig:stepC}, changing the spring constant influences the value to which $x$ converges towards. A reduced spring constant leads to a larger convergent value of $x$, while an increased spring constant leads to a smaller convergent value of $x$.\newline\newline
-	\noindent
-	The Matlab code for generating these plots and running the simulation is provided in the snippet below.\newline
-	\textbf{Matlab code snippet:}\newline
-	%\lstinputlisting[style=matlabstyle, linerange={56, 61-124}]{../a_exercise3.m}
 	\newpage
 	
-	\section*{Exercise 3c): Building and optimizing a two-mass system in Simulink}
+	\section*{Exercise 4c): Trying different solvers and comparing the results.}
+	For this sub task we are going to simulate our closed loop system with controller value $K_P=0.05$ using different solvers of different accuracy for non-stiff and stiff systems. Specifically we chose ode45 and ode23 for non-stiff systems and ode15s and ode23s for stiff systems. With these requirements we can formulate a Matlab script to determine results. Furthermore, we are using state equations of the closed loop system to simulate it, so that ode solvers can handle this problem. This gets apparent from the Matlab code as stated below:\newline\newline
+	\noindent
+	\textbf{Matlab Code Snippet:}
+	\lstinputlisting[style=matlabstyle]{../exercise4 sudeesh/exer4creal.m}
+	\noindent
+	The simulations only run for a very short time frame of 3 milliseconds each. This can be done, because the current values converge after just about a single millisecond. For better comparison, we overlap all of the resulting graphs in the same plot. This is shown in figures \ref{fig:stepResponse4c1} and \ref{fig:stepResponse4c2} below. For this comparison we are using two images of the same plot in order to showcase the similarity of the results.
 	\begin{figure}[H]
 		\centering
-		%\includegraphics[width=0.7\linewidth]{twoMassSketch.png}
-		\caption{Two-mass spring/damper system with some physical characteristics.}
-		\label{fig:twoMassSketch}
+		\includegraphics[width=1.0\linewidth]{solverComparison.pdf}
+		\caption{Step response $i(t)$ of a closed loop model of a dc-motor for different solvers.}
+		\label{fig:stepResponse4c1}
+	\end{figure}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1.0\linewidth]{zoom.pdf}
+		\caption{Step response $i(t)$ of a closed loop model of a dc-motor for different solvers zoomed in.}
+		\label{fig:stepResponse4c2}
 	\end{figure}
 	\noindent
-	The model to be simulated is illustrated in figure \ref{fig:twoMassSketch} above. This system possesses five physical properties, of which some are already specified. The specified values are $C_1 = 15\frac{N}{m}$, $m_1=100kg$ and  $m_2=10kg$. The unspecified values are the spring constant $C_2$ and the damper constant $D_2$. These two values need to be optimized as such, that the oscillation of the entire system, more specifically the oscillation of $m_1$ gets minimized. \newline
-	From this visual model, we can derive the differential movement equations for $m_1$ and $m_2$ as follows:\newline
+	Apparently, the results seem to be very similar for all four solvers, no matter if they are designated for stiff or non-stiff systems. Only when zooming in very close, in this case close to the maximum, minor differences become apparent. These differences can be attributed to the different underlying algorithmic methods used by the solvers. Apart from that, they deliver basically equal results.
 	
-	\begin{equation}\label{twoMassDiffEqM1}
-		m_1\ddot{x}_1 = -C_1x_1 + C_2(x_2-x_1) + D_2(\dot{x}_2-\dot{x}_1)
-	\end{equation}
-	\begin{equation}\label{twoMassDiffEqM2}
-		m_2\ddot{x}_2 = C_2(x_1-x_2) + D_2(\dot{x}_1-\dot{x}_2)
-	\end{equation}
-	\noindent
-	Using equation \ref{twoMassDiffEqM1} and \ref{twoMassDiffEqM2} we can build our model in Simulink which looks like this:\newline
-	
-	\begin{figure}[H]
-		\centering
-		%\includegraphics[width=1.0\linewidth]{twoMassModel.png}
-		\caption{Differential equation of two-mass spring/damper system conveyed as Simulink model.}
-		\label{fig:twoMassModelSimulink}
-	\end{figure}
-	\noindent
-	This model uses four integrator blocks to depict signals of $\ddot{x}_1$, $\dot{x}_1$, $x_1$, $\ddot{x}_2$, $\dot{x}_2$ and $x_2$ whose outputs get multiplied by their corresponding gain blocks and added together to form the sums of acting forces on $m_1$ and $m_2$. Furthermore, an initial force $F(t)$, simulated by a step block, gets added to the sum of forces acting upon $m_1$. This force is not part of our visual model, however we are using it to get our system into motion.\newline
-	To elaborate, how optimal values for $C_2$ and $D_2$ are to be determined, we are going to take a closer look at the corresponding Matlab code.\newline\newline
-	\textbf{Matlab code snippet:}
-	%\lstinputlisting[style=matlabstyle]{../ex3c.m}
-	\begin{enumerate}
-		\item First of all, we initialize the known physical properties with their values. The unknown properties get assigned a zero value.
-		\item Next, we define range vectors for the damper and spring constants which we want to test. Both values should range from 0.1 to 1.5 with a step size of 0.1.
-		\item After that we define an initially filled with zeros 15 by 15 matrix \texttt{areaUnderCurve}, which shall store the results of each test value combination.
-		\item Now we test each value combination by iterating over both range vectors using nested for-loops. For each combination, the following steps are performed:
-		\begin{enumerate}
-			\item Assign the current values to the simulation parameters and run the simulation with them.
-			\item Extract the simulation results, specifically the run time-frame and result vectors for $x_1$ and $x_2$ positions.
-			\item Calculate and store the area under the squared $x_1$ curve. For this we use the inbuilt \texttt{trapz} function.
-		\end{enumerate}
-		\item Now that that all value combinations have been tested, we can generate a surface plot of \texttt{areaUnderCurve}. Furthermore, we extract the optimal row, col where the value is minimal.
-		\item From this, we can determine optimal values for $C_2$ and $D_2$ and generate a plot sowing the optimal result. 
-	\end{enumerate}
-	From this we can determine \textbf{the optimal values, which are $C_2=1.3\frac{N}{m}$ and $D_2=1.1\frac{Ns}{m}$.} The above mentioned plots are illustrated below in figures \ref{fig:surface} and \ref{fig:optimized}:\newline
-	
-	\begin{figure}[H]
-		\centering
-		%\includegraphics[width=0.8\linewidth]{surface.pdf}
-		\caption{Area under squared $x_1$-curve for all tested combinations of $C_2$ and $D_2$.}
-		\label{fig:surface}
-	\end{figure}
-	\begin{figure}[H]
-		\centering
-		%\includegraphics[width=0.8\linewidth]{optimized.pdf}
-		\caption{Oscillations of $m_1$ and $m_2$ with optimal parameters $C_2$ and $D_2$ over a time frame of 300 seconds.}
-		\label{fig:optimized}
-	\end{figure}
-	\noindent
-	Hereby we assume that the minimum area under the curve corresponds to the optimally damped model, because a smaller area corresponds to a faster converging $x_1$-curve. The absolute area value itself does not posses any relevant meaning for our purposes. 
+
 		
 \end{document}

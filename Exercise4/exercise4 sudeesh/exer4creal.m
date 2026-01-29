@@ -16,24 +16,29 @@ motor_cl = @(t,x) [
 ];
 
 x0 = [0 0];
-tspan = [0 0.05];
+tspan = [0 0.003];
 
 % Solve using different solvers
-[t45,x45]   = ode45(motor_cl, tspan, x0);
-[t23,x23]   = ode23(motor_cl, tspan, x0);
-[t15s,x15s] = ode15s(motor_cl, tspan, x0);  % stiff solver
+[t45,x45]   = ode45(motor_cl, tspan, x0); % medium accuracy solver 
+[t23,x23]   = ode23(motor_cl, tspan, x0); % low accuracy solver
+[t15s,x15s] = ode15s(motor_cl, tspan, x0);  % stiff solver low to medium
+[t23s, x23s] = ode23s(motor_cl, tspan, x0) % stiff solver for low
 figure;
 
-subplot(3,1,1)
+subplot(4,1,1)
 plot(t45, x45(:,1),'LineWidth',1.5)
 title('ode45 Current'), grid on
 
-subplot(3,1,2)
+subplot(4,1,2)
 plot(t23, x23(:,1),'LineWidth',1.5)
 title('ode23 Current'), grid on
 
-subplot(3,1,3)
+subplot(4,1,3)
 plot(t15s, x15s(:,1),'LineWidth',1.5)
+title('ode15s Current'), grid on
+
+subplot(4, 1, 4)
+plot(t23s, x23s(:,1),'LineWidth',1.5)
 title('ode15s Current'), grid on
 
 xlabel('Time [s]')
@@ -42,9 +47,10 @@ figure;
 plot(t45, x45(:,1),'LineWidth',1.5); hold on
 plot(t23, x23(:,1),'--','LineWidth',1.5)
 plot(t15s, x15s(:,1),':','LineWidth',1.5)
+plot(t23s, x23s(:,1),':','LineWidth',1.5)
 
 xlabel('Time [s]')
 ylabel('Motor Current [A]')
 title('Solver Comparison (Motor Current)')
-legend('ode45','ode23','ode15s')
+legend('ode45','ode23','ode15s', 'ode23s')
 grid on
