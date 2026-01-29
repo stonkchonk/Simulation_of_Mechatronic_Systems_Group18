@@ -79,22 +79,36 @@
 		\caption{Open loop model of a dc-motor.}
 		\label{fig:openLoopModelSimulink}
 	\end{figure}
+	\noindent
+	\newpage
+	Running this model and code yields the following step response for $i(t)$ and $\omega(t)$ subject to time:
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1.0\linewidth]{step_response_4a.pdf}
+		\caption{Open loop model of a dc-motor.}
+		\label{fig:stepResponse4a}
+	\end{figure}
+	\noindent
+	As show above in figure \ref{fig:stepResponse4a} both $i(t)$ and $\omega(t)$ converge towards a steady value after about 0.005 seconds. Now that we have a working open loop model of a dc-motor, we can continue on to optimize it with a simple speed controller.
+	\newpage
 	
-	
-	
-	
-	
-	
-	
-	
-	
+	\section*{Exercise 3b): Changing parameters of the controller to get a good control behavior}
+	Within the exercise description, there is already an illustration of a dc-motor that uses the output value $\omega$ to influence a controller $K_P$ which then again influences the input voltage $u$. This is displayed below in figure \ref{fig:dcMotorSpeedControl}:
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=1.0\linewidth]{openloop.png}
-		\caption{Open loop model of a dc-motor.}
-		\label{fig:openLoopModel}
+		\caption{Model of a dc-motor hooked up to a speed controller $K_P$.}
+		\label{fig:dcMotorSpeedControl}
 	\end{figure}
-	
+	Now, we build this model within Simulink which is shown below in figure \ref{fig:dcMotorSpeedControlSimulink}:
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1.0\linewidth]{closedLoopDcMotor.png}
+		\caption{Model of a dc-motor hooked up to a speed controller $K_P$ in Simulink.}
+		\label{fig:dcMotorSpeedControlSimulink}
+	\end{figure}
+	\noindent
+	Hereby our speed controller simply consists of a gain block which multiplies the output angular speed $\omega$ by a factor $K_P$ and adds that to the input voltage $u$. A good control behavior is accomplished when the motor converges towards a steady angular speed $\omega$ and current $i$ as fast as possible. Without controller the motor takes about 0.005 seconds, as determined in the previous subtask. 
 	
 	\noindent
 	Hereby, variables $K$ and $T$ are to be defined as $K=5$ and $T=4$. Furthermore, the differential equation of \textbf{PT1} is given as follows:\newline

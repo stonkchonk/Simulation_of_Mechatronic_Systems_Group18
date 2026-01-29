@@ -9,7 +9,7 @@ G = cm / ((L*s+R)*(J*s+D) + cm^2);
 
 rlocus(G) % choose gain from plot
 grid on; 
-Kp = 0.05;
+Kp = 0.05; % speed controller gain factor
 
 T = feedback(Kp*G,1);
 step(T)
@@ -17,12 +17,12 @@ title('Closed-loop Speed')
 out1=sim('exercise4reabb.slx');
 figure;
 subplot(2,1,1);
-plot(out1.ex.time,out1.ex.signals(1).values);% plot the graph in matlab using the values from simulink
+plot(out1.ex.time,out1.ex.signals(1).values);% plotting values for angular speed
 xlabel('time');
-ylabel('speed v(t)');
+ylabel('angular speed $\omega(t)$','Interpreter','latex');
 grid on;
 subplot(2,1,2);
-plot(out1.wx.time,out1.wx.signals(1).values);
+plot(out1.wx.time,out1.wx.signals(1).values);% plotting values for current
 ylabel('current i(t)');
 xlabel('time');
 grid on;
