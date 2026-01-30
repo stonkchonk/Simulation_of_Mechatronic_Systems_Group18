@@ -1,0 +1,116 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{float}
+\geometry{margin=1.8cm}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstdefinestyle{matlabstyle}{
+	language=Matlab,
+	basicstyle=\ttfamily\small,
+	numbers=left,
+	numberstyle=\tiny,
+	backgroundcolor=\color{gray!5},
+	frame=single,
+	keywordstyle=\color{blue},
+	commentstyle=\color{green!50!black},
+	stringstyle=\color{orange},
+	breaklines=true
+}
+
+\lstdefinestyle{cstyle}{
+	language=C,
+	basicstyle=\ttfamily\small,
+	numbers=left,
+	numberstyle=\tiny,
+	backgroundcolor=\color{gray!5},
+	frame=single,
+	keywordstyle=\color{blue},
+	commentstyle=\color{green!50!black},
+	stringstyle=\color{orange},
+	breaklines=true
+}
+
+
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks=true,
+	linkcolor=blue,
+	filecolor=magenta,      
+	urlcolor=cyan,
+	pdftitle={Overleaf Example},
+	pdfpagemode=FullScreen,
+}
+
+
+\title{Simulation of Mechatronic Systems \\\large Exercise 6 protocol - Building Simulink-Blocks in C}
+\IfFileExists{authors.tex}{
+	\input{authors} % this pulls in authors.tex
+}{
+	\author{please create an authors.tex file}
+}
+
+\begin{document}
+	\maketitle
+	\section*{Exercise 6a): Implement the model as an S-Function using the S-function builder. Investigate the generated c source code.}
+	In this exercise we aim to build our dc-motor model using a C based implementation approach. For this, Matlab provides us with the S-function builder. The corresponding, relevant source code is provided below:\newline\newline
+	\noindent
+	\textbf{C Code Snippet:}
+	\lstinputlisting[style=cstyle]{../ex6_sudeesh/wrapper_functions.c}
+	\noindent
+	For our implementation, the beforehand generated functions \verb|exer6com_Outputs_wrapper| and \verb|exer6com_Derivatives_wrapper| are of interest. Within the first one, we assign the output values for the motor current $i$ and the angular speed $\omega$.\newpage
+	
+	\section*{Exercise 6b): Testing the block and comparing the results with the signal-flow model}
+	Next up, we can test the C implementation within a designated Simulink block called \verb|S-Function Builder|. The Simulink model now looks like the following figure \ref{fig:sFunctionBlock} as shown below:\newline\newline
+	\textbf{Simulink Model:}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\linewidth]{sFunctionBlock.png}
+		\caption{S-Function block encompasses entire open loop model of a dc-motor.}
+		\label{fig:sFunctionBlock}
+	\end{figure}
+	\noindent
+	This large block corresponds to all the blue-marked blocks of the exercise description. To test it, we run the following Matlab script, which generates plots which can be compared to the previous results of exercise 4.\newline\newline
+	\noindent
+	\textbf{Matlab Code Snippet:}
+	\lstinputlisting[style=matlabstyle]{../ex6_sudeesh/exer6code.m}
+	This code snipped produces the following output plot of current $i$ and angular speed $\omega$ subject to time.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\linewidth]{sFunctionResponses.pdf}
+		\caption{Step response of S-Function block.}
+		\label{fig:sFunctionResponses}
+	\end{figure}
+	\noindent
+	This result does in fact not seem to match very well with the results of exercise 4. Due to time constraints we have to leave it at that unfortunately.\newpage
+	
+	\section*{Exercise 6c): Creating our own symbol for the block}
+	Following the Matlab documentation page \href{https://de.mathworks.com/help/simulink/ug/creating-subsystems.html}{Group Blocks into Subsystems}, we can define our own subsystem custom block. This block encompasses once again the functionalities of the dc-motor open loop model and looks like the following figure \ref{fig:subsystem} in Simulink:\newline\newline
+	\textbf{Simulink Model:}
+		
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\linewidth]{subsystem.png}
+		\caption{Subsystem block encompassing all the functionalities of the dc-motor open loop model.}
+		\label{fig:subsystem}
+	\end{figure}
+	\noindent
+	This subsystem can also be expanded to show all its inner workings.
+	
+	\section*{Exercise 6d): Investigating further examples of s-blocks inside the S-Function Demo library}
+	Apparently, S-Functions, specifically their underlying code, can be written in multiple programming languages. Matlab allows for C, C++, Fortran and the Matlab language itself.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\linewidth]{examples.png}
+		\caption{S-Function demo library.}
+		\label{fig:examples}
+	\end{figure}
+	\noindent
+	The shown sections contain subsections of multiple examples of complex systems compressed into a single block.
+	
+\end{document}
+
