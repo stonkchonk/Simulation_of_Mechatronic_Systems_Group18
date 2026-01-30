@@ -1,0 +1,136 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{url}
+\usepackage{float}
+\geometry{margin=1.8cm}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstdefinestyle{matlabstyle}{
+	language=Matlab,
+	basicstyle=\ttfamily\small,
+	numbers=left,
+	numberstyle=\tiny,
+	backgroundcolor=\color{gray!5},
+	frame=single,
+	keywordstyle=\color{blue},
+	commentstyle=\color{green!50!black},
+	stringstyle=\color{orange},
+	breaklines=true
+}
+
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks=true,
+	linkcolor=blue,
+	filecolor=magenta,      
+	urlcolor=cyan,
+	pdftitle={Overleaf Example},
+	pdfpagemode=FullScreen,
+}
+
+
+\title{Simulation of Mechatronic Systems \\\large Exercise 5 protocol - Controller design for motor speed controller}
+\IfFileExists{authors.tex}{
+	\input{authors} % this pulls in authors.tex
+}{
+	\author{please create an authors.tex file}
+}
+
+\begin{document}
+	\maketitle
+	\section*{Exercise 5a): Simulating the motor-behavior for an input-voltage of 10 Volts}
+	In the previous exercise 4 we defined and built an open-loop model of a dc-motor. Now we want to simulate it with an input-voltage of 10 volts. For this, we can simply adjust the input voltage within our previously defined Simulink model, which we are also going to use for the follow-up tasks of this exercise. The model is shown below in figure \ref{fig:openLoopModelSimulink}:\newline\newline
+	\noindent
+	\textbf{Simulink Model:}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\linewidth]{openLoopSimulink.png}
+		\caption{Open loop model of a dc-motor.}
+		\label{fig:openLoopModelSimulink}
+	\end{figure}
+	\noindent
+	In addition to that, the dc-motor's fixed physical propertied remain unchanged.
+	\begin{itemize}
+		\item $L=0.23 \cdot 10^{-3}H$
+		\item $c_m = 23.4 \cdot 10^{-3} \frac{Nm}{A}$
+		\item $R = 2.4 \Omega$
+		\item $J = 0.23 \cdot 10^{-6} Nm^{2}$
+		\item $D = 0.4191 \cdot 10^{-5} \frac{Ns}{m}$
+	\end{itemize}
+	\noindent
+	Running this simulation with 10 volts yields the following step response equivalent to the previous exercise:
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\linewidth]{step10vOpenLoop.pdf}
+		\caption{Step response of the open loop model of a dc-motor at 10V.}
+		\label{fig:step10vOpenLoop}
+	\end{figure}
+	\noindent
+	As shown above in \ref{fig:step10vOpenLoop}, angular speed $\omega$ converges to a value just above $400 \frac{rad}{s}$ and the current $i$ to about $0.1A$. Time to convergence is about 0.005 seconds, which is similar to the result of exercise 4. Using our Simulink model, we can design a controller using the Linearize-Tool and Sisotool of Matlab in the next sub task.
+	
+	\section*{Exercise 5b): Simulating the motor-behavior for an input-voltage of 10 Volts}
+	As visible in \ref{fig:openLoopModelSimulink}, the voltage input has been marked as \verb|Input Pertubation| and the output angular velocity $\omega$ has been marked as \verb|Output Measurement|. This equates to the first step in designing a speed controller in Matlab using the Linearize-Tool and Sisotool of Matlab.\newline
+	With this step complete, we can open up the Linearize-Tool using Model-Linearizer in the Apps section. In this tool we generate a step response which yields \verb|linsys1|, which we can export to our Matlab workspace. The step response can be seen below in figure \ref{fig:Linearize}:
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1.0\linewidth]{linearizer.pdf}
+		\caption{Step response created within the Linearize-Tool.}
+		\label{fig:Linearize}
+	\end{figure}
+	\noindent
+	Next up, we execute two commands in the command line of our workspace to import that model within Sisotool:
+	\begin{itemize}
+		\item \verb|fo = tf(linsys1)|
+		\item \verb|sisotool(fo)|
+	\end{itemize}
+	This opens up Sisotool, with which we can create a controller for optimization purposes.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1.0\linewidth]{sisotool4.png}
+		\caption{Optimized step response shown in the Sisotool.}
+		\label{fig:sisotool}
+	\end{figure}
+	\noindent
+	Shown above in figure \ref{fig:sisotool} is an optimized step response in the Sisotool. To optimize it, we added an Integrator and Real Zero in the Bode Editor. This optimized model can be exported as a controller to the Matlab workspace as a variable \verb|C|.\newline
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1.0\linewidth]{closedLoop.png}
+		\caption{Closed loop system with controller without voltage limits and quantizer.}
+		\label{fig:closedLoop}
+	\end{figure}
+	\noindent
+	Now we can modify our open-loop system by adding a \verb|LTI System| block to the input as shown above in figure \ref{fig:closedLoop}. Within this block we reference our variable \verb|C|. With that, the design of the speed controller is complete.
+	\newpage
+	
+	\section*{Exercise 5c): Testing the designed controller and investigating the influence of voltage limits and quantizer-effects}
+	To investigate the influence of voltage limits and quantizer-effects, we are going to add a \verb|Quantizer| and a \verb|Saturation| block to our closed loop model. This yields the following model as shown below in figure \ref{fig:closedLoopLimiters}:
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1.0\linewidth]{closedLoopLimiters.png}
+		\caption{Closed loop system with controller with voltage limits and quantizer.}
+		\label{fig:closedLoopLimiters}
+	\end{figure}
+	\noindent
+	Hereby the output angular velocity as input of the controller is being quantized as steps of $5\frac{rad}{s}$ by a \verb|Quantizer| block. The output voltage of the controller gets limited by a \verb|Saturation| block to $\pm 12V$.\newline
+	To compare both outputs of the closed-loop models with and without limiting blocks, we are going to overlay their step responses in a single plot, which is shown below in figure \ref{fig:controllerPlots}:
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1.0\linewidth]{controllerPlots.pdf}
+		\caption{Step responses of both closed loop systems.}
+		\label{fig:controllerPlots}
+	\end{figure}
+	\noindent
+	The closed-loop system without limiters converges in just over 0.001 seconds to a steady value of $\omega$, whereas the system with limiters takes about 0.006 seconds. Also noticeable is the aspect that the graph of the system with limiters seems to contain some abrupt, step-like changes. Furthermore, both systems converge towards a slightly different value. This might be attributed to the \verb|Quantizer| block. \newline
+	The Matlab code of the executing script is shown below.\newline\newline
+	\noindent
+	\textbf{Matlab Code Snippet:}
+	\lstinputlisting[style=matlabstyle]{../exercise5_sudeesh/exercise5.m}
+		
+\end{document}

@@ -13,7 +13,10 @@ figure;
 plot(out1.ex5.time, out1.ex5.signals(1).values) % Signal 1
 hold on
 plot(out1.ex5.time, out1.ex5.signals(2).values) % Signal 2
-legend('Signal 1','Signal 2')
+legend('without additional components','with voltage limits, quatizer')
+ylabel('angular speed $\omega(t)$','Interpreter','latex');
+xlabel('time');
+title('Step response of closed loop system')
 
 grid on;
 
